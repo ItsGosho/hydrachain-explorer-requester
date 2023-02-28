@@ -111,15 +111,18 @@ class ExplorerRequester:
         response = requests.get(url=url,
                                 headers=self._get_request_headers())
 
+        self._validate_get_response(response)
+
+        return response.json()
+
+    def _validate_get_response(self, response):
         if response.status_code is not 200:
             raise requests.HTTPError(
-                f"GET {url} responded with unexpected code {response.status_code} and content {response.content}")
+                f"GET {response.url} responded with unexpected code {response.status_code} and content {response.content}")
 
         if not 'application/json' in response.headers.get('content-type'):
             raise requests.JSONDecodeError(
-                f"GET {url} responded with code {response.status_code} and unexpected content {response.content}")
-
-        return response.json()
+                f"GET {response.url} responded with code {response.status_code} and unexpected content {response.content}")
 
     def _get_request_headers(self) -> dict:
         return {'User-Agent': self.request_user_agent}
