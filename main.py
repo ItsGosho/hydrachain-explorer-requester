@@ -7,13 +7,15 @@ from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
 logging.basicConfig(level=logging.DEBUG)
 explorer_requester = ExplorerRequester()
 
+print(explorer_requester.search('asd'))
+
 # date_string = "03 February 2020"
 # date_object = datetime.strptime(date_string, "%d %B %Y")
 # print(explorer_requester.get_blocks(date_object))
 
-params = {'q': 'python', 'page': 2}
-url = urlunsplit(('https', 'www.google.com', '/search', urlencode(params), ''))
-print(url)
+#params = {'q': 'python', 'page': 2}
+#url = urlunsplit(('https', 'www.google.com', '/search', urlencode(params), ''))
+#print(url)
 
 transactionIds = [
     "c01c990a3014fb42645172866b94327ac78113ae0575d47db9c008221acf719e",
