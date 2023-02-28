@@ -11,55 +11,56 @@ logger = logging.getLogger(__name__)
 class ExplorerRequester:
     def __init__(self):
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
+        self.domain = "https://explorer.hydrachain.org"
         pass
 
     def search(self, value: str) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/search?query={value}"
+        url = f"{self.domain}/7001/search?query={value}"
 
         return self._execute_get(url)
 
     def get_biggest_miners(self, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/misc/biggest-miners?page={page_number}&pageSize={page_size}"
+        url = f"{self.domain}/7001/misc/biggest-miners?page={page_number}&pageSize={page_size}"
 
         return self._execute_get(url)
 
     def get_rich_list(self, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/misc/rich-list?page={page_number}&pageSize={page_size}"
+        url = f"{self.domain}/7001/misc/rich-list?page={page_number}&pageSize={page_size}"
 
         return self._execute_get(url)
 
     def get_daily_transactions(self) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/stats/daily-transactions"
+        url = f"{self.domain}/7001/stats/daily-transactions"
 
         return self._execute_get(url)
 
     def get_block_interval(self) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/stats/block-interval"
+        url = f"{self.domain}/7001/stats/block-interval"
 
         return self._execute_get(url)
 
     def get_address_growth(self) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/stats/address-growth"
+        url = f"{self.domain}/7001/stats/address-growth"
 
         return self._execute_get(url)
 
     def get_recent_blocks(self) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/recent-blocks"
+        url = f"{self.domain}/7001/recent-blocks"
 
         return self._execute_get(url)
 
     def get_recent_txs(self) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/recent-txs"
+        url = f"{self.domain}/7001/recent-txs"
 
         return self._execute_get(url)
 
     def get_info(self) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/info"
+        url = f"{self.domain}/7001/info"
 
         return self._execute_get(url)
 
     def get_block(self, number: int) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/block/{number}"
+        url = f"{self.domain}/7001/block/{number}"
 
         return self._execute_get(url)
 
@@ -67,43 +68,43 @@ class ExplorerRequester:
         date_format = "%Y-%m-%d"
         date_formatted = date.strftime(date_format)
 
-        url = f"https://explorer.hydrachain.org/7001/blocks?date={date_formatted}"
+        url = f"{self.domain}/7001/blocks?date={date_formatted}"
 
         return self._execute_get(url)
 
     def get_tokens(self, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/qrc20?page={page_number}&pageSize={page_size}"
+        url = f"{self.domain}/7001/qrc20?page={page_number}&pageSize={page_size}"
 
         return self._execute_get(url)
 
     def get_contract(self, contract: str) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/contract/{contract}"
+        url = f"{self.domain}/7001/contract/{contract}"
 
         return self._execute_get(url)
 
     def get_contract_transactions(self, contract: str, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/contract/{contract}/txs?page={page_number}&pageSize={page_size}"
+        url = f"{self.domain}/7001/contract/{contract}/txs?page={page_number}&pageSize={page_size}"
 
         return self._execute_get(url)
 
     def get_address(self, address: str) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/address/{address}"
+        url = f"{self.domain}/7001/address/{address}"
 
         return self._execute_get(url)
 
     def get_address_transactions(self, address: str, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/address/{address}/txs?page={page_number}&pageSize={page_size}"
+        url = f"{self.domain}/7001/address/{address}/txs?page={page_number}&pageSize={page_size}"
 
         return self._execute_get(url)
 
     def get_transaction(self, transaction) -> dict:
-        url = f"https://explorer.hydrachain.org/7001/tx/{transaction}"
+        url = f"{self.domain}/7001/tx/{transaction}"
 
         return self._execute_get(url)
 
     def get_transactions(self, transactions: List[str]) -> dict:
         transactions_formatted = ','.join(transactions)
-        url = f"https://explorer.hydrachain.org/7001/txs/{transactions_formatted}"
+        url = f"{self.domain}/7001/txs/{transactions_formatted}"
 
         return self._execute_get(url)
 
