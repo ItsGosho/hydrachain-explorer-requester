@@ -17,52 +17,52 @@ class ExplorerRequester:
     def search(self, value: str) -> dict:
         url = f"{self.domain}/7001/search?query={value}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_biggest_miners(self, page_number: int = 0, page_size: int = 20) -> dict:
         url = f"{self.domain}/7001/misc/biggest-miners?page={page_number}&pageSize={page_size}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_rich_list(self, page_number: int = 0, page_size: int = 20) -> dict:
         url = f"{self.domain}/7001/misc/rich-list?page={page_number}&pageSize={page_size}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_daily_transactions(self) -> dict:
         url = f"{self.domain}/7001/stats/daily-transactions"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_block_interval(self) -> dict:
         url = f"{self.domain}/7001/stats/block-interval"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_address_growth(self) -> dict:
         url = f"{self.domain}/7001/stats/address-growth"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_recent_blocks(self) -> dict:
         url = f"{self.domain}/7001/recent-blocks"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_recent_txs(self) -> dict:
         url = f"{self.domain}/7001/recent-txs"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_info(self) -> dict:
         url = f"{self.domain}/7001/info"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_block(self, number: int) -> dict:
         url = f"{self.domain}/7001/block/{number}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_blocks(self, date: datetime) -> dict:
         date_format = "%Y-%m-%d"
@@ -70,57 +70,62 @@ class ExplorerRequester:
 
         url = f"{self.domain}/7001/blocks?date={date_formatted}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_tokens(self, page_number: int = 0, page_size: int = 20) -> dict:
         url = f"{self.domain}/7001/qrc20?page={page_number}&pageSize={page_size}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_contract(self, contract: str) -> dict:
         url = f"{self.domain}/7001/contract/{contract}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_contract_transactions(self, contract: str, page_number: int = 0, page_size: int = 20) -> dict:
         url = f"{self.domain}/7001/contract/{contract}/txs?page={page_number}&pageSize={page_size}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_address(self, address: str) -> dict:
         url = f"{self.domain}/7001/address/{address}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_address_transactions(self, address: str, page_number: int = 0, page_size: int = 20) -> dict:
         url = f"{self.domain}/7001/address/{address}/txs?page={page_number}&pageSize={page_size}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_transaction(self, transaction) -> dict:
         url = f"{self.domain}/7001/tx/{transaction}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
     def get_transactions(self, transactions: List[str]) -> dict:
         transactions_formatted = ','.join(transactions)
         url = f"{self.domain}/7001/txs/{transactions_formatted}"
 
-        return self._execute_get(url)
+        return self._request_explorer(url)
 
-    def _execute_get(self, url: str) -> dict:
+    def _request_explorer(self, url: str) -> dict:
         response = requests.get(url=url,
                                 headers=self._get_request_headers())
 
-        self._validate_get_response(response)
+        self._validate_response(response)
 
         return response.json()
 
-    def _validate_get_response(self, response):
+    def _validate_response(self, response):
+        self._validate_response_code(response)
+        self._validate_response_content_type(response)
+
+    def _validate_response_code(self, response):
         if response.status_code is not 200:
             raise requests.HTTPError(
                 f"GET {response.url} responded with unexpected code {response.status_code} and content {response.content}")
 
+    def _validate_response_content_type(self, response):
         if not 'application/json' in response.headers.get('content-type'):
             raise requests.JSONDecodeError(
                 f"GET {response.url} responded with code {response.status_code} and unexpected content {response.content}")
