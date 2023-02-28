@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "hydrachain_explorer_requester"
+version = "0.1.0"
+authors = [
+    {name = "Georgi Peev"}
+]
+description = "A simple Python library for easily accessing the Hydrachain explorer's API"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+[project.urls]
+"Source" = "https://github.com/ItsGosho/hydrachain-explorer-requester"
