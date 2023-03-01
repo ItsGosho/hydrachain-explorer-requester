@@ -5,7 +5,7 @@ import requests as requests
 from hydrachain_explorer_requester import __version__
 from datetime import datetime
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class ResponseCodeError(Exception):
@@ -17,7 +17,8 @@ class ResponseBodyError(Exception):
 
 
 class ExplorerRequester:
-    def __init__(self):
+    def __init__(self, logger = _logger):
+        self.logger = _logger
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
         self.domain = "https://explorer.hydrachain.org"
         pass
@@ -117,7 +118,7 @@ class ExplorerRequester:
         return self._request_explorer(url)
 
     def _request_explorer(self, url: str) -> dict:
-        logging.debug(f"Starting a new hydrachain explorer request to {url}")
+        self.logger.debug(f"Starting a new hydrachain explorer request to {url}")
 
         response = requests.get(
             url=url,
@@ -126,7 +127,7 @@ class ExplorerRequester:
 
         self._validate_response(response)
 
-        logging.debug(
+        self.logger.debug(
             f"Received a successful hydrachain explorer response to {response.url} with content {response.content}")
 
         return response.json()
