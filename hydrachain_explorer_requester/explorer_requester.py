@@ -18,7 +18,7 @@ class ResponseBodyError(Exception):
 
 class ExplorerRequester:
     def __init__(self, logger = _logger):
-        self.logger = _logger
+        self.logger = logger
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
         self.domain = "https://explorer.hydrachain.org"
         pass
