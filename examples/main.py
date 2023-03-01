@@ -7,7 +7,7 @@ from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
 logging.basicConfig(level=logging.DEBUG)
 explorer_requester = ExplorerRequester()
 
-print(explorer_requester.search('asd'))
+print(explorer_requester.search('123')["type"])
 
 # date_string = "03 February 2020"
 # date_object = datetime.strptime(date_string, "%d %B %Y")

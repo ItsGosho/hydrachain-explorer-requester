@@ -7,11 +7,14 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+
 class ResponseCodeError(Exception):
     """A not expected response code has been received."""
 
+
 class ResponseBodyError(Exception):
     """A not expected response body has been received."""
+
 
 class ExplorerRequester:
     def __init__(self):
@@ -116,12 +119,15 @@ class ExplorerRequester:
     def _request_explorer(self, url: str) -> dict:
         logging.debug(f"Starting a new hydrachain explorer request to {url}")
 
-        response = requests.get(url=url,
-                                headers=self._get_request_headers())
+        response = requests.get(
+            url=url,
+            headers=self._get_request_headers()
+        )
 
         self._validate_response(response)
 
-        logging.debug(f"Received a successful hydrachain explorer response to {response.url} with content {response.content}")
+        logging.debug(
+            f"Received a successful hydrachain explorer response to {response.url} with content {response.content}")
 
         return response.json()
 
