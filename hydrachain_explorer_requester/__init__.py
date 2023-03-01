@@ -1,5 +1,3 @@
-import toml
+import pkg_resources
 
-version = toml.load("pyproject.toml")["project"]["version"]
-
-__version__ = version
+__version__ = pkg_resources.get_distribution(__name__).version
