@@ -171,11 +171,10 @@ class ExplorerRequester:
         )
 
     def _request_explorer(self, path: str, params: dict = {}, domain: str = None) -> dict:
-        domain = domain or self.domain
 
         request = requests.Request(
             method='GET',
-            url=f"{domain}{path}",
+            url=f"{domain or self.domain}{path}",
             headers=self._get_request_headers(),
             params=params
         )
