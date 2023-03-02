@@ -163,6 +163,28 @@ class ExplorerRequester:
             }
         )
 
+    def get_address_transactions_iterator(self, address: str, request_portion: int = 20) -> dict:
+
+        page_number = 0
+        while True:
+
+           address_transactions_response = self.get_address_transactions(
+                address=address,
+                page_number=page_number,
+                page_size=request_portion
+            )
+
+           address_transactions = address_transactions_response["transactions"]
+
+           if len(address_transactions) <= 0:
+               break
+
+           for address_transaction in address_transactions:
+                yield address_transaction
+
+           page_number = page_number + 1
+
+
     def get_transaction(self, transaction) -> dict:
 
         return self._request_explorer(
@@ -211,7 +233,7 @@ class ExplorerRequester:
         self._validate_response_content_type(response)
 
     def _validate_response_code(self, response):
-        if response.status_code is not 200:
+        if response.status_code != 200:
             raise ResponseCodeError(
                 f"GET {response.url} responded with unexpected code {response.status_code} and content {response.content}")
 

@@ -11,7 +11,7 @@ authors = [
 ]
 description = "A simple Python library for easily accessing the Hydrachain explorer's API"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
