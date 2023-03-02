@@ -23,13 +23,15 @@ class ResponseBodyError(Exception):
 class ExplorerRequester:
     def __init__(self,
                  logger=_logger,
-                 timeout=None):
+                 timeout=None,
+                 hooks=None):
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
         self.domain = "https://explorer.hydrachain.org"
 
         self.logger = logger
         self.session = Session()
         self.timeout = timeout
+        self.hooks = hooks
         pass
 
     def search(self, value: str) -> dict:
@@ -170,13 +172,18 @@ class ExplorerRequester:
             path=f"/7001/txs/{transactions_formatted}"
         )
 
-    def _request_explorer(self, path: str, params: dict = {}, domain: str = None) -> dict:
+    def _request_explorer(self, path: str,
+                          params: dict = {},
+                          domain: str = None,
+                          method: str = 'GET',
+                          ) -> dict:
 
         request = requests.Request(
-            method='GET',
+            method=method,
             url=f"{domain or self.domain}{path}",
             headers=self._get_request_headers(),
-            params=params
+            params=params,
+            hooks=self.hooks
         )
 
         self.logger.debug(f"Starting a new hydrachain explorer request to {request.url}?{urlencode(request.params)}")
