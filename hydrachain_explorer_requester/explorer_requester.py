@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import List
+from typing import List, Callable
 from urllib.parse import urlencode
 
 import requests
@@ -57,6 +57,14 @@ class ExplorerRequester:
             }
         )
 
+    def get_biggest_miners_iterator(self, request_portion: int = 20):
+
+        return self._pageable_iterator(
+            function=self.get_biggest_miners,
+            data_field='list',
+            request_portion=request_portion
+        )
+
     def get_rich_list(self, page_number: int = 0, page_size: int = 20) -> dict:
 
         return self._request_explorer(
@@ -65,6 +73,14 @@ class ExplorerRequester:
                 'page': page_number,
                 'pageSize': page_size
             }
+        )
+
+    def get_rich_list_iterator(self, request_portion: int = 20):
+
+        return self._pageable_iterator(
+            function=self.get_rich_list,
+            data_field='list',
+            request_portion=request_portion
         )
 
     def get_daily_transactions(self) -> dict:
@@ -131,6 +147,14 @@ class ExplorerRequester:
             }
         )
 
+    def get_tokens_iterator(self, request_portion: int = 20):
+
+        return self._pageable_iterator(
+            function=self.get_tokens,
+            data_field='tokens',
+            request_portion=request_portion
+        )
+
     def get_contract(self, contract: str) -> dict:
 
         return self._request_explorer(
@@ -145,6 +169,15 @@ class ExplorerRequester:
                 'page': page_number,
                 'pageSize': page_size
             }
+        )
+
+    def get_contract_transactions_iterator(self, contract: str, request_portion: int = 20):
+
+        return self._pageable_iterator(
+            function=self.get_contract_transactions,
+            external_arguments={'contract': contract},
+            data_field='transactions',
+            request_portion=request_portion
         )
 
     def get_address(self, address: str) -> dict:
@@ -163,27 +196,14 @@ class ExplorerRequester:
             }
         )
 
-    def get_address_transactions_iterator(self, address: str, request_portion: int = 20) -> dict:
+    def get_address_transactions_iterator(self, address: str, request_portion: int = 20):
 
-        page_number = 0
-        while True:
-
-           address_transactions_response = self.get_address_transactions(
-                address=address,
-                page_number=page_number,
-                page_size=request_portion
-            )
-
-           address_transactions = address_transactions_response["transactions"]
-
-           if len(address_transactions) <= 0:
-               break
-
-           for address_transaction in address_transactions:
-                yield address_transaction
-
-           page_number = page_number + 1
-
+        return self._pageable_iterator(
+            function=self.get_address_transactions,
+            external_arguments={'address': address},
+            data_field='transactions',
+            request_portion=request_portion
+        )
 
     def get_transaction(self, transaction) -> dict:
 
@@ -197,6 +217,26 @@ class ExplorerRequester:
         return self._request_explorer(
             path=f"/7001/txs/{transactions_formatted}"
         )
+
+    def _pageable_iterator(self, function: Callable, data_field: str, external_arguments: dict = {},
+                           request_portion: int = 20):
+        page_number = 0
+        while True:
+
+            external_arguments['page_number'] = page_number
+            external_arguments['page_size'] = request_portion
+
+            response = function(**external_arguments)
+
+            data = response[data_field]
+
+            if len(data) <= 0:
+                break
+
+            for d in data:
+                yield d
+
+            page_number = page_number + 1
 
     def _request_explorer(self,
                           path: str,
@@ -224,7 +264,7 @@ class ExplorerRequester:
         self._validate_response(response)
 
         self.logger.debug(
-            f"Received a successful hydrachain explorer response to {response.url} with content {response.content}")
+            f"Received a successful hydrachain explorer response from {response.url} with content {response.content}")
 
         return response.json()
 
