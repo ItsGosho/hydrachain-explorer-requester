@@ -1,6 +1,5 @@
 import logging
 from typing import List
-from urllib.request import Request
 
 import requests
 from requests import Session
@@ -129,7 +128,7 @@ class ExplorerRequester:
     def _request_explorer(self, url: str) -> dict:
         self.logger.debug(f"Starting a new hydrachain explorer request to {url}")
 
-        response = requests.get(
+        response = self.session.get(
             url=url,
             headers=self._get_request_headers(),
             timeout=self.timeout
