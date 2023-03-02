@@ -1,5 +1,7 @@
+import json
 import logging
 from typing import List
+from urllib.parse import urlencode
 
 import requests
 from requests import Session
@@ -170,14 +172,18 @@ class ExplorerRequester:
 
     def _request_explorer(self, path: str, params: dict = {}) -> dict:
         url = f"{self.domain}{path}"
-        self.logger.debug(f"Starting a new hydrachain explorer request to {url}?{params}")
 
-        response = self.session.get(
+        request = requests.Request(
+            method='GET',
             url=url,
             headers=self._get_request_headers(),
-            timeout=self.timeout,
             params=params
         )
+
+        self.logger.debug(f"Starting a new hydrachain explorer request to {request.url}?{urlencode(request.params)}")
+
+        prepared_request = self.session.prepare_request(request)
+        response = self.session.send(prepared_request)
 
         self._validate_response(response)
 
