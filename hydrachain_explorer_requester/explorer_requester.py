@@ -14,14 +14,26 @@ _logger = logging.getLogger(__name__)
 
 
 class ResponseCodeError(Exception):
-    """A not expected response code has been received."""
+    """
+    A not expected response code has been received.
+    We always expect response with code 200 from the Explorer's API.
+    """
 
 
 class ResponseBodyError(Exception):
-    """A not expected response body has been received."""
+    """
+    A not expected response body has been received.
+    We always expect a JSON response from the Explorer's API.
+    """
 
 
 class ExplorerRequester:
+    """
+    Easy-to-use class that provides function, which return data from the explorer's API.
+    Optionally you can customize the logger or properties of the used requester.
+    Data retrieved from the explorer is returned in raw format.
+    """
+
     def __init__(self,
                  logger: logging = _logger,
                  timeout_seconds: float = None,
@@ -218,8 +230,19 @@ class ExplorerRequester:
             path=f"/7001/txs/{transactions_formatted}"
         )
 
-    def _pageable_iterator(self, function: Callable, data_field: str, external_arguments: dict = {},
-                           request_portion: int = 20):
+    def _pageable_iterator(self,
+                           function: Callable, data_field: str,
+                           external_arguments: dict = {},
+                           request_portion: int = 20
+                           ):
+        """
+        Easy-to-use wrapper for removing repeating logic, when calling a functions that have pageable.
+
+        :param function: A function, that have page_number and page_size arguments and returns a dict, when called.
+        :param data_field: A field in the returned dict, when the function was called, which contains array of data.
+        :param external_arguments: Additional arguments of the functions.
+        :param request_portion: How many data to fetch at once
+        """
         page_number = 0
         while True:
 
