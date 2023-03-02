@@ -10,7 +10,6 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 #Configure the used requester
-timeout_seconds = 0.5 # 500 milliseconds
 http_adapter = HTTPAdapter(
     pool_connections=requests.adapters.DEFAULT_POOLSIZE,
     pool_maxsize=requests.adapters.DEFAULT_POOLSIZE,
@@ -20,7 +19,7 @@ http_adapter = HTTPAdapter(
 
 #Place the configured requester configuration
 explorer_requester = ExplorerRequester(
-    timeout_seconds = timeout_seconds,
+    timeout_seconds = 0.5, # 500 milliseconds
     http_adapter=http_adapter
 )
 
