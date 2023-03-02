@@ -13,6 +13,11 @@ explorer_requester = ExplorerRequester(
     timeout_seconds=0.5, #seconds
     http_adapter=http_adapter
 )
+
+def asd(test):
+    pass
+test = {'response': asd}
+print(type(test))
 block_156 = explorer_requester.get_block(156)
 
 print(block_156)

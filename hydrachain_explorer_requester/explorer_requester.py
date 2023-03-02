@@ -25,7 +25,7 @@ class ExplorerRequester:
     def __init__(self,
                  logger: logging = _logger,
                  timeout_seconds: float = None,
-                 hooks=None,
+                 hooks: dict = None,
                  http_adapter: HTTPAdapter = HTTPAdapter()):
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
         self.domain = "https://4af2931a-7094-40b9-b701-33ea3ae5bad4.mock.pstmn.io"
@@ -176,7 +176,8 @@ class ExplorerRequester:
             path=f"/7001/txs/{transactions_formatted}"
         )
 
-    def _request_explorer(self, path: str,
+    def _request_explorer(self,
+                          path: str,
                           params: dict = {},
                           domain: str = None,
                           method: str = 'GET',
