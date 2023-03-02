@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 
 import requests
 from requests import Session
+from requests.adapters import HTTPAdapter
 
 from hydrachain_explorer_requester import __version__
 from datetime import datetime
@@ -22,17 +23,20 @@ class ResponseBodyError(Exception):
 
 class ExplorerRequester:
     def __init__(self,
-                 logger=_logger,
-                 timeout=None,
-                 hooks=None):
+                 logger: logging = _logger,
+                 timeout_seconds: float = None,
+                 hooks=None,
+                 http_adapter: HTTPAdapter = HTTPAdapter()):
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
-        self.domain = "https://explorer.hydrachain.org"
+        self.domain = "https://4af2931a-7094-40b9-b701-33ea3ae5bad4.mock.pstmn.io"
 
         self.logger = logger
         self.session = Session()
-        self.timeout = timeout
+        self.timeout = timeout_seconds
         self.hooks = hooks
-        pass
+        self.http_adapter = http_adapter
+        self.session.mount('http://', self.http_adapter)
+        self.session.mount('https://', self.http_adapter)
 
     def search(self, value: str) -> dict:
 
@@ -189,7 +193,10 @@ class ExplorerRequester:
         self.logger.debug(f"Starting a new hydrachain explorer request to {request.url}?{urlencode(request.params)}")
 
         prepared_request = self.session.prepare_request(request)
-        response = self.session.send(prepared_request)
+        response = self.session.send(
+            request=prepared_request,
+            timeout=self.timeout
+        )
 
         self._validate_response(response)
 

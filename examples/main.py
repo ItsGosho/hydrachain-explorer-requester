@@ -1,16 +1,18 @@
 import logging
 
+from requests.adapters import HTTPAdapter
+
 from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
 
 logging.basicConfig(level=logging.DEBUG)
 
-def test_hook(request, *args, **kwargs):
-    """
-    A custom request hook that adds a custom header to the request.
-    """
-    debug = 5
-
-explorer_requester = ExplorerRequester(hooks={'response': test_hook})
+http_adapter = HTTPAdapter(
+    max_retries=2,
+)
+explorer_requester = ExplorerRequester(
+    timeout_seconds=0.5, #seconds
+    http_adapter=http_adapter
+)
 block_156 = explorer_requester.get_block(156)
 
 print(block_156)
