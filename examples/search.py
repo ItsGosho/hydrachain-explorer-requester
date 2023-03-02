@@ -2,6 +2,7 @@ import logging
 
 from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
 
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def search(value: str) -> dict:
