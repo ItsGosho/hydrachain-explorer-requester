@@ -170,12 +170,12 @@ class ExplorerRequester:
             path=f"/7001/txs/{transactions_formatted}"
         )
 
-    def _request_explorer(self, path: str, params: dict = {}) -> dict:
-        url = f"{self.domain}{path}"
+    def _request_explorer(self, path: str, params: dict = {}, domain: str = None) -> dict:
+        domain = domain or self.domain
 
         request = requests.Request(
             method='GET',
-            url=url,
+            url=f"{domain}{path}",
             headers=self._get_request_headers(),
             params=params
         )
