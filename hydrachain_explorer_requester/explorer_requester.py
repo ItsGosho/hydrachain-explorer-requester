@@ -1,7 +1,10 @@
 import logging
 from typing import List
+from urllib.request import Request
 
-import requests as requests
+import requests
+from requests import Session
+
 from hydrachain_explorer_requester import __version__
 from datetime import datetime
 
@@ -17,10 +20,15 @@ class ResponseBodyError(Exception):
 
 
 class ExplorerRequester:
-    def __init__(self, logger = _logger):
-        self.logger = logger
+    def __init__(self,
+                 logger=_logger,
+                 timeout=None):
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
         self.domain = "https://explorer.hydrachain.org"
+
+        self.logger = logger
+        self.session = Session()
+        self.timeout = timeout
         pass
 
     def search(self, value: str) -> dict:
@@ -117,12 +125,14 @@ class ExplorerRequester:
 
         return self._request_explorer(url)
 
+
     def _request_explorer(self, url: str) -> dict:
         self.logger.debug(f"Starting a new hydrachain explorer request to {url}")
 
         response = requests.get(
             url=url,
-            headers=self._get_request_headers()
+            headers=self._get_request_headers(),
+            timeout=self.timeout
         )
 
         self._validate_response(response)
