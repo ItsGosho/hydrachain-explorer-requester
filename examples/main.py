@@ -1,9 +1,16 @@
+import logging
+
 from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
+
+logging.basicConfig(level=logging.DEBUG)
 
 explorer_requester = ExplorerRequester()
 block_156 = explorer_requester.get_block(156)
 
 print(block_156)
+
+rich_list = explorer_requester.get_rich_list(page_number=1, page_size=2)
+print(rich_list)
 
 # date_string = "03 February 2020"
 # date_object = datetime.strptime(date_string, "%d %B %Y")

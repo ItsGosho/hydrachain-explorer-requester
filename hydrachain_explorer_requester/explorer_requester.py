@@ -31,107 +31,133 @@ class ExplorerRequester:
         pass
 
     def search(self, value: str) -> dict:
-        url = f"{self.domain}/7001/search?query={value}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/search",
+            params={'query': value}
+        )
 
     def get_biggest_miners(self, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"{self.domain}/7001/misc/biggest-miners?page={page_number}&pageSize={page_size}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/misc/biggest-miners",
+            params={'page': page_number, 'pageSize': page_size}
+        )
 
     def get_rich_list(self, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"{self.domain}/7001/misc/rich-list?page={page_number}&pageSize={page_size}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/misc/rich-list",
+            params={'page': page_number, 'pageSize': page_size}
+        )
 
     def get_daily_transactions(self) -> dict:
-        url = f"{self.domain}/7001/stats/daily-transactions"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/stats/daily-transactions"
+        )
 
     def get_block_interval(self) -> dict:
-        url = f"{self.domain}/7001/stats/block-interval"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/stats/block-interval"
+        )
 
     def get_address_growth(self) -> dict:
-        url = f"{self.domain}/7001/stats/address-growth"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/stats/address-growth"
+        )
 
     def get_recent_blocks(self) -> dict:
-        url = f"{self.domain}/7001/recent-blocks"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/recent-blocks"
+        )
 
     def get_recent_txs(self) -> dict:
         url = f"{self.domain}/7001/recent-txs"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/recent-txs"
+        )
 
     def get_info(self) -> dict:
-        url = f"{self.domain}/7001/info"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/info"
+        )
 
     def get_block(self, number: int) -> dict:
-        url = f"{self.domain}/7001/block/{number}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path=f"/7001/block/{number}"
+        )
 
     def get_blocks(self, date: datetime) -> dict:
         date_format = "%Y-%m-%d"
         date_formatted = date.strftime(date_format)
 
-        url = f"{self.domain}/7001/blocks?date={date_formatted}"
-
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path="/7001/blocks",
+            params={'date': date_formatted}
+        )
 
     def get_tokens(self, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"{self.domain}/7001/qrc20?page={page_number}&pageSize={page_size}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path='/7001/qrc20',
+            params={'page': page_number, 'pageSize': page_size}
+        )
 
     def get_contract(self, contract: str) -> dict:
-        url = f"{self.domain}/7001/contract/{contract}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path=f"/7001/contract/{contract}"
+        )
 
     def get_contract_transactions(self, contract: str, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"{self.domain}/7001/contract/{contract}/txs?page={page_number}&pageSize={page_size}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path=f"/7001/contract/{contract}/txs",
+            params={'page': page_number, 'pageSize': page_size}
+        )
 
     def get_address(self, address: str) -> dict:
-        url = f"{self.domain}/7001/address/{address}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path=f"/7001/address/{address}"
+        )
 
     def get_address_transactions(self, address: str, page_number: int = 0, page_size: int = 20) -> dict:
-        url = f"{self.domain}/7001/address/{address}/txs?page={page_number}&pageSize={page_size}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path=f"/7001/address/{address}/txs",
+            params={'page': page_number, 'pageSize': page_size}
+        )
 
     def get_transaction(self, transaction) -> dict:
-        url = f"{self.domain}/7001/tx/{transaction}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path=f"/7001/tx/{transaction}"
+        )
 
     def get_transactions(self, transactions: List[str]) -> dict:
         transactions_formatted = ','.join(transactions)
-        url = f"{self.domain}/7001/txs/{transactions_formatted}"
 
-        return self._request_explorer(url)
+        return self._request_explorer(
+            path=f"/7001/txs/{transactions_formatted}"
+        )
 
-
-    def _request_explorer(self, url: str) -> dict:
-        self.logger.debug(f"Starting a new hydrachain explorer request to {url}")
+    def _request_explorer(self, path: str, params: dict = {}) -> dict:
+        url = f"{self.domain}{path}"
+        self.logger.debug(f"Starting a new hydrachain explorer request to {url}?{params}")
 
         response = self.session.get(
             url=url,
             headers=self._get_request_headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
+            params=params
         )
 
         self._validate_response(response)
