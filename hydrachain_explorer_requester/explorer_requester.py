@@ -28,7 +28,7 @@ class ExplorerRequester:
                  hooks: dict = None,
                  http_adapter: HTTPAdapter = HTTPAdapter()):
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
-        self.domain = "https://4af2931a-7094-40b9-b701-33ea3ae5bad4.mock.pstmn.io"
+        self.domain = "https://explorer.hydrachain.org"
 
         self.logger = logger
         self.session = Session()
