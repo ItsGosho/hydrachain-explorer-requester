@@ -34,21 +34,29 @@ class ExplorerRequester:
 
         return self._request_explorer(
             path="/7001/search",
-            params={'query': value}
+            params={
+                'query': value
+            }
         )
 
     def get_biggest_miners(self, page_number: int = 0, page_size: int = 20) -> dict:
 
         return self._request_explorer(
             path="/7001/misc/biggest-miners",
-            params={'page': page_number, 'pageSize': page_size}
+            params={
+                'page': page_number,
+                'pageSize': page_size
+            }
         )
 
     def get_rich_list(self, page_number: int = 0, page_size: int = 20) -> dict:
 
         return self._request_explorer(
             path="/7001/misc/rich-list",
-            params={'page': page_number, 'pageSize': page_size}
+            params={
+                'page': page_number,
+                'pageSize': page_size
+            }
         )
 
     def get_daily_transactions(self) -> dict:
@@ -100,14 +108,19 @@ class ExplorerRequester:
 
         return self._request_explorer(
             path="/7001/blocks",
-            params={'date': date_formatted}
+            params={
+                'date': date_formatted
+            }
         )
 
     def get_tokens(self, page_number: int = 0, page_size: int = 20) -> dict:
 
         return self._request_explorer(
             path='/7001/qrc20',
-            params={'page': page_number, 'pageSize': page_size}
+            params={
+                'page': page_number,
+                'pageSize': page_size
+            }
         )
 
     def get_contract(self, contract: str) -> dict:
@@ -120,7 +133,10 @@ class ExplorerRequester:
 
         return self._request_explorer(
             path=f"/7001/contract/{contract}/txs",
-            params={'page': page_number, 'pageSize': page_size}
+            params={
+                'page': page_number,
+                'pageSize': page_size
+            }
         )
 
     def get_address(self, address: str) -> dict:
@@ -133,7 +149,10 @@ class ExplorerRequester:
 
         return self._request_explorer(
             path=f"/7001/address/{address}/txs",
-            params={'page': page_number, 'pageSize': page_size}
+            params={
+                'page': page_number,
+                'pageSize': page_size
+            }
         )
 
     def get_transaction(self, transaction) -> dict:
