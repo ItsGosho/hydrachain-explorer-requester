@@ -1,4 +1,8 @@
 # Hydrachain Explorer Requester
+
+[![PyPI](https://img.shields.io/pypi/v/hydrachain-explorer-requester.svg)](https://pypi.python.org/pypi/hydrachain-explorer-requester)
+[![PyPI](https://img.shields.io/pypi/pyversions/hydrachain-explorer-requester.svg)](https://pypi.python.org/pypi/hydrachain-explorer-requester)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ItsGosho/hydrachain-explorer-requester/blob/main/LICENSE)
 Easy to use library for accessing the [Hydrachain Explorer](https://explorer.hydrachain.org/) endpoints. Functionality for easy iteration over the pageable requests is provided. Optional configuration of the used requester in the library is also provided. Validation of the response is present.
 
 ## Installation
@@ -6,7 +10,7 @@ Easy to use library for accessing the [Hydrachain Explorer](https://explorer.hyd
 #### PyPI:
 
 ```
-pip install TODO
+pip install hydrachain-explorer-requester
 ```
 
 #### Local:
@@ -22,37 +26,28 @@ pip install .
 #### Block:
 
 ```python
-import logging
 from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 explorer_requester = ExplorerRequester()
 
 # Block - https://explorer.hydrachain.org/block/123/
 block_response = explorer_requester.get_block(123)
 
-logger.info(block_response)
+print(block_response)
 ```
 
 #### Address Transactions: 
 
 ```python
-import logging
-
 from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 explorer_requester = ExplorerRequester()
 
-# Address - https://explorer.hydrachain.org/address/H7FYCLijimtbYk7gdN1hmweftuWLQni3m5/
-address_transactions_iterator = explorer_requester.get_address_transactions_iterator("H7FYCLijimtbYk7gdN1hmweftuWLQni3m5")
+# Address - https://explorer.hydrachain.org/address/HCiMdPYCsdPPvbjxHQMmK8QVBEGwextvir/
+address_transactions_iterator = explorer_requester.get_address_transactions_iterator("HCiMdPYCsdPPvbjxHQMmK8QVBEGwextvir")
 
 for address_transactions_response in address_transactions_iterator:
-    logger.info(address_transactions_response)
+    print(address_transactions_response)
 ```
 
 - **_iterator** ending functions accept a optional **portion** parameter. The **portion** parameter define how much elements to be taken, when making each request.
@@ -61,12 +56,7 @@ for address_transactions_response in address_transactions_iterator:
 #### Search:
 
 ```python
-import logging
-
 from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 def search(value: str) -> dict:
     search_response = explorer_requester.search(value)
@@ -86,7 +76,7 @@ def search(value: str) -> dict:
             address = search_response['address']
             return explorer_requester.get_contract(address)
         case _:
-            logger.warning(f'Type {type} not implemented!')
+            print(f'Type {type} not implemented!')
             return {}
 
 
