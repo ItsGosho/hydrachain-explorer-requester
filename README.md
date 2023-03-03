@@ -3,6 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/hydrachain-explorer-requester.svg)](https://pypi.python.org/pypi/hydrachain-explorer-requester)
 [![PyPI](https://img.shields.io/pypi/pyversions/hydrachain-explorer-requester.svg)](https://pypi.python.org/pypi/hydrachain-explorer-requester)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ItsGosho/hydrachain-explorer-requester/blob/main/LICENSE)
+
 Easy to use library for accessing the [Hydrachain Explorer](https://explorer.hydrachain.org/) endpoints. Functionality for easy iteration over the pageable requests is provided. Optional configuration of the used requester in the library is also provided. Validation of the response is present.
 
 ## Installation
