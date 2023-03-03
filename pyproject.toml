@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 
 [project]
-name = "hydrachain_explorer_requester"
+name = "hydrachain-explorer-requester"
 version = "0.1.0"
 authors = [
     {name = "Georgi Peev"}
