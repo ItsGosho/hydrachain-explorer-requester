@@ -13,6 +13,7 @@ from hydrachain_explorer_requester.address_balance_category import AddressBalanc
 from hydrachain_explorer_requester.query_parameters.address_transactions_query_parameters import \
     AddressTransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.biggest_miners_query_parameters import BiggestMinersQueryParameters
+from hydrachain_explorer_requester.query_parameters.blocks_query_parameters import BlocksQueryParameters
 from hydrachain_explorer_requester.query_parameters.contract_transactions_query_parameters import \
     ContractTransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.pagination_query_parameters import PaginationQueryParameters
@@ -148,14 +149,12 @@ class ExplorerRequester:
             path=f'/7001/block/{number}'
         )
 
-    def get_blocks(self, date: datetime) -> dict:
-        date_format = '%Y-%m-%d'
-        date_formatted = date.strftime(date_format)
+    def get_blocks(self, query_parameters: BlocksQueryParameters) -> dict:
 
         return self._request_explorer_json(
             path='/7001/blocks',
             params={
-                'date': date_formatted
+                **query_parameters.date.pair()
             }
         )
 
