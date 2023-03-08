@@ -1,6 +1,6 @@
 import logging
 
-from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
+from hydrachain_explorer_requester.enum.address_balance_category import AddressBalanceCategory
 from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
 
 logging.basicConfig(level=logging.DEBUG)

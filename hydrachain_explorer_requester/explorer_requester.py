@@ -7,20 +7,8 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 
 from hydrachain_explorer_requester import __version__
-
-from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
-from hydrachain_explorer_requester.query_parameters.address_balance_history_query_parameters import \
-    AddressBalanceHistoryQueryParameters
-from hydrachain_explorer_requester.query_parameters.call_contract_query_parameters import CallContractQueryParameters
-from hydrachain_explorer_requester.query_parameters.search_logs_query_parameters import SearchLogsQueryParameters
-from hydrachain_explorer_requester.query_parameters.transactions_query_parameters import \
-    TransactionsQueryParameters
-from hydrachain_explorer_requester.query_parameters.biggest_miners_query_parameters import BiggestMinersQueryParameters
-from hydrachain_explorer_requester.query_parameters.blocks_query_parameters import BlocksQueryParameters
-from hydrachain_explorer_requester.query_parameters.pagination_query_parameters import PaginationQueryParameters
-from hydrachain_explorer_requester.query_parameters.recent_blocks_query_parameters import RecentBlocksQueryParameters
-from hydrachain_explorer_requester.query_parameters.rich_list_query_parameters import RichListQueryParameters
-from hydrachain_explorer_requester.query_parameters.tokens_query_parameters import TokensQueryParameters
+from hydrachain_explorer_requester.enum import AddressBalanceCategory
+from hydrachain_explorer_requester.query_parameters import *
 
 _logger = logging.getLogger(__name__)
 
@@ -458,9 +446,7 @@ class ExplorerRequester:
             path=f'/7001/raw-tx/{transaction}'
         )
 
-    def get_transactions(self,
-                         transactions: List[str]
-                         ) -> dict:
+    def get_transactions(self, transactions: List[str]) -> dict:
         transactions_formatted = ','.join(transactions)
 
         return self._request_explorer_json(
