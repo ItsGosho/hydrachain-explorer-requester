@@ -6,7 +6,7 @@ from hydrachain_explorer_requester.query_parameters.pagination_query_parameters 
 
 
 @dataclass
-class BlocksQueryParameters():
+class BlocksQueryParameters:
     date: QueryParameter = field(default_factory=lambda: QueryParameter('date', None))
 
     def set_date(self, date: datetime.date):
