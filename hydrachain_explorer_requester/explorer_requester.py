@@ -9,6 +9,8 @@ from requests.adapters import HTTPAdapter
 from hydrachain_explorer_requester import __version__
 from datetime import datetime
 
+from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
+
 _logger = logging.getLogger(__name__)
 
 
@@ -51,7 +53,7 @@ class ExplorerRequester:
 
     def search(self, value: str) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/search',
             params={
                 'query': value
@@ -60,7 +62,7 @@ class ExplorerRequester:
 
     def get_biggest_miners(self, page_number: int = 0, page_size: int = 20) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/misc/biggest-miners',
             params={
                 'page': page_number,
@@ -78,7 +80,7 @@ class ExplorerRequester:
 
     def get_rich_list(self, page_number: int = 0, page_size: int = 20) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/misc/rich-list',
             params={
                 'page': page_number,
@@ -96,43 +98,43 @@ class ExplorerRequester:
 
     def get_daily_transactions(self) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/stats/daily-transactions'
         )
 
     def get_block_interval(self) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/stats/block-interval'
         )
 
     def get_address_growth(self) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/stats/address-growth'
         )
 
     def get_recent_blocks(self) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/recent-blocks'
         )
 
     def get_recent_txs(self) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/recent-txs'
         )
 
     def get_info(self) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/info'
         )
 
     def get_block(self, number: int) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path=f'/7001/block/{number}'
         )
 
@@ -140,7 +142,7 @@ class ExplorerRequester:
         date_format = '%Y-%m-%d'
         date_formatted = date.strftime(date_format)
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/blocks',
             params={
                 'date': date_formatted
@@ -149,7 +151,7 @@ class ExplorerRequester:
 
     def get_tokens(self, page_number: int = 0, page_size: int = 20) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path='/7001/qrc20',
             params={
                 'page': page_number,
@@ -167,13 +169,13 @@ class ExplorerRequester:
 
     def get_contract(self, contract: str) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path=f'/7001/contract/{contract}'
         )
 
     def get_contract_transactions(self, contract: str, page_number: int = 0, page_size: int = 20) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path=f'/7001/contract/{contract}/txs',
             params={
                 'page': page_number,
@@ -192,13 +194,19 @@ class ExplorerRequester:
 
     def get_address(self, address: str) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path=f'/7001/address/{address}'
+        )
+
+    def get_address_balance(self, address: str,
+                            category: AddressBalanceCategory = AddressBalanceCategory.NO_CATEGORY) -> str:
+        return self._request_explorer_text(
+            path=f'/7001/address/{address}/balance/{category.value}',
         )
 
     def get_address_transactions(self, address: str, page_number: int = 0, page_size: int = 20) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path=f'/7001/address/{address}/txs',
             params={
                 'page': page_number,
@@ -217,14 +225,14 @@ class ExplorerRequester:
 
     def get_transaction(self, transaction) -> dict:
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path=f'/7001/tx/{transaction}'
         )
 
     def get_transactions(self, transactions: List[str]) -> dict:
         transactions_formatted = ','.join(transactions)
 
-        return self._request_explorer(
+        return self._request_explorer_json(
             path=f'/7001/txs/{transactions_formatted}'
         )
 
@@ -259,12 +267,31 @@ class ExplorerRequester:
 
             page_number = page_number + 1
 
+    def _request_explorer_json(self,
+                               path: str,
+                               params: dict = {},
+                               domain: str = None,
+                               method: str = 'GET',
+                               ) -> dict:
+        response = self._request_explorer(path, params, domain, method)
+        self._validate_response(response)
+        return response.json()
+
+    def _request_explorer_text(self,
+                               path: str,
+                               params: dict = {},
+                               domain: str = None,
+                               method: str = 'GET',
+                               ) -> str:
+        response = self._request_explorer(path, params, domain, method)
+        return response.text
+
     def _request_explorer(self,
                           path: str,
                           params: dict = {},
                           domain: str = None,
                           method: str = 'GET',
-                          ) -> dict:
+                          ):
 
         request = requests.Request(
             method=method,
@@ -282,12 +309,10 @@ class ExplorerRequester:
             timeout=self.timeout
         )
 
-        self._validate_response(response)
-
         self.logger.debug(
-            f'Received a successful hydrachain explorer response from {response.url} with content {response.content}')
+            f'Received a hydrachain explorer response from {response.url} with content {response.content}')
 
-        return response.json()
+        return response
 
     def _validate_response(self, response):
         self._validate_response_code(response)
