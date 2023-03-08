@@ -143,10 +143,13 @@ class ExplorerRequester:
             path='/7001/info'
         )
 
-    def get_block(self, number: int) -> dict:
+    def get_block(self, value: str) -> dict:
+        """
+        :param value: height or hash
+        """
 
         return self._request_explorer_json(
-            path=f'/7001/block/{number}'
+            path=f'/7001/block/{value}'
         )
 
     def get_blocks(self, query_parameters: BlocksQueryParameters) -> dict:
