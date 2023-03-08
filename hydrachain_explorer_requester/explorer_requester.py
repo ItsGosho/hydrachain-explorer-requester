@@ -11,6 +11,8 @@ from hydrachain_explorer_requester import __version__
 from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
 from hydrachain_explorer_requester.query_parameters.address_balance_history_query_parameters import \
     AddressBalanceHistoryQueryParameters
+from hydrachain_explorer_requester.query_parameters.call_contract_query_parameters import CallContractQueryParameters
+from hydrachain_explorer_requester.query_parameters.search_logs_query_parameters import SearchLogsQueryParameters
 from hydrachain_explorer_requester.query_parameters.transactions_query_parameters import \
     TransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.biggest_miners_query_parameters import BiggestMinersQueryParameters
@@ -222,6 +224,31 @@ class ExplorerRequester:
 
         return self._pageable_iterator(
             function=self.get_contract_transactions,
+            external_arguments={'contract': contract},
+            data_field='transactions',
+            request_portion=request_portion
+        )
+
+    def get_contract_basic_transactions(self,
+                                        contract: str,
+                                        query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
+                                        ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/contract/{contract}/basic-txs',
+            params={
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.reversed.pair()
+            }
+        )
+
+    def get_contract_basic_transactions_iterator(self,
+                                                 contract: str,
+                                                 request_portion: int = 20
+                                                 ):
+
+        return self._pageable_iterator(
+            function=self.get_contract_basic_transactions,
             external_arguments={'contract': contract},
             data_field='transactions',
             request_portion=request_portion
@@ -477,6 +504,45 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/txs/{transactions_formatted}'
+        )
+
+    def call_contract(self,
+                      contract: str,
+                      query_parameters: CallContractQueryParameters = CallContractQueryParameters()
+                      ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/contract/{contract}/call',
+            params={
+                **query_parameters.data.pair(),
+                **query_parameters.sender.pair()
+            }
+        )
+
+    def get_search_logs(self,
+                        query_parameters: SearchLogsQueryParameters = SearchLogsQueryParameters()
+                        ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/searchlogs',
+            params={
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.contract.pair(),
+                **query_parameters.topic1.pair(),
+                **query_parameters.topic2.pair(),
+                **query_parameters.topic3.pair(),
+                **query_parameters.topic4.pair(),
+            }
+        )
+
+    def get_search_logs_iterator(self,
+                                 request_portion: int = 20
+                                 ):
+
+        return self._pageable_iterator(
+            function=self.get_search_logs,
+            data_field='transactions',
+            request_portion=request_portion
         )
 
     def _pageable_iterator(self,
