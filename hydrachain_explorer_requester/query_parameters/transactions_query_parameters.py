@@ -6,7 +6,7 @@ from hydrachain_explorer_requester.query_parameters.pagination_query_parameters 
 
 
 @dataclass
-class AddressBasicTransactionsQueryParameters(PaginationQueryParameters, BlockQueryParameters):
+class TransactionsQueryParameters(PaginationQueryParameters, BlockQueryParameters):
     reversed: QueryParameter = field(default_factory=lambda: QueryParameter('reversed', None))
 
     def set_reversed(self, reversed: str):

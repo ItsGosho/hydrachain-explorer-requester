@@ -5,7 +5,7 @@ from hydrachain_explorer_requester.query_parameters.pagination_query_parameters 
 
 
 @dataclass
-class RecentBlocksQueryParameters():
+class RecentBlocksQueryParameters:
     count: QueryParameter = field(default_factory=lambda: QueryParameter('count', None))
 
     def set_count(self, count: int):

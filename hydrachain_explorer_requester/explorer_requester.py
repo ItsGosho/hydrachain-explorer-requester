@@ -7,21 +7,14 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 
 from hydrachain_explorer_requester import __version__
-from datetime import datetime
 
 from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
 from hydrachain_explorer_requester.query_parameters.address_balance_history_query_parameters import \
     AddressBalanceHistoryQueryParameters
-from hydrachain_explorer_requester.query_parameters.address_basic_transactions_query_parameters import \
-    AddressBasicTransactionsQueryParameters
-from hydrachain_explorer_requester.query_parameters.address_contract_transactions_query_parameters import \
-    AddressContractTransactionsQueryParameters
-from hydrachain_explorer_requester.query_parameters.address_transactions_query_parameters import \
-    AddressTransactionsQueryParameters
+from hydrachain_explorer_requester.query_parameters.transactions_query_parameters import \
+    TransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.biggest_miners_query_parameters import BiggestMinersQueryParameters
 from hydrachain_explorer_requester.query_parameters.blocks_query_parameters import BlocksQueryParameters
-from hydrachain_explorer_requester.query_parameters.contract_transactions_query_parameters import \
-    ContractTransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.pagination_query_parameters import PaginationQueryParameters
 from hydrachain_explorer_requester.query_parameters.recent_blocks_query_parameters import RecentBlocksQueryParameters
 from hydrachain_explorer_requester.query_parameters.rich_list_query_parameters import RichListQueryParameters
@@ -211,13 +204,14 @@ class ExplorerRequester:
 
     def get_contract_transactions(self,
                                   contract: str,
-                                  query_parameters: ContractTransactionsQueryParameters = ContractTransactionsQueryParameters()
+                                  query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
                                   ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/contract/{contract}/txs',
             params={
-                **self.get_pagination_query_parameters(query_parameters)
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.reversed.pair()
             }
         )
 
@@ -333,13 +327,14 @@ class ExplorerRequester:
 
     def get_address_transactions(self,
                                  address: str,
-                                 query_parameters: AddressTransactionsQueryParameters = AddressTransactionsQueryParameters()
+                                 query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
                                  ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/txs',
             params={
-                **self.get_pagination_query_parameters(query_parameters)
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.reversed.pair()
             }
         )
 
@@ -355,15 +350,43 @@ class ExplorerRequester:
             request_portion=request_portion
         )
 
+    def get_address_qrc20_transactions(self,
+                                       address: str,
+                                       token: str,
+                                       query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
+                                       ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/qrc20-txs/{token}',
+            params={
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.reversed.pair()
+            }
+        )
+
+    def get_address_qrc20_transactions_iterator(self,
+                                                address: str,
+                                                token: str,
+                                                request_portion: int = 20
+                                                ):
+
+        return self._pageable_iterator(
+            function=self.get_address_qrc20_transactions,
+            external_arguments={'address': address, 'token': token},
+            data_field='transactions',
+            request_portion=request_portion
+        )
+
     def get_address_basic_transactions(self,
                                        address: str,
-                                       query_parameters: AddressBasicTransactionsQueryParameters = AddressBasicTransactionsQueryParameters()
+                                       query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
                                        ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/basic-txs',
             params={
-                **self.get_pagination_query_parameters(query_parameters)
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.reversed.pair()
             }
         )
 
@@ -381,13 +404,14 @@ class ExplorerRequester:
 
     def get_address_contract_transactions(self,
                                           address: str,
-                                          query_parameters: AddressContractTransactionsQueryParameters = AddressContractTransactionsQueryParameters()
+                                          query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
                                           ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/contract-txs',
             params={
-                **self.get_pagination_query_parameters(query_parameters)
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.reversed.pair()
             }
         )
 
@@ -406,13 +430,14 @@ class ExplorerRequester:
     def get_address_contract_transactions_by_contract(self,
                                                       address: str,
                                                       contract: str,
-                                                      query_parameters: AddressContractTransactionsQueryParameters = AddressContractTransactionsQueryParameters()
+                                                      query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
                                                       ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/contract-txs/{contract}',
             params={
-                **self.get_pagination_query_parameters(query_parameters)
+                **self.get_pagination_query_parameters(query_parameters),
+                **query_parameters.reversed.pair()
             }
         )
 
