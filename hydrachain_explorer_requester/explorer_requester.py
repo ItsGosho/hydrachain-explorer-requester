@@ -250,7 +250,7 @@ class ExplorerRequester:
         """
         Easy-to-use wrapper for removing repeating logic, when calling a functions that have pageable.
 
-        :param function: A function, that have page_number and page_size arguments and returns a dict, when called.
+        :param function: A function, that have query_parameters argument, which is a class of type PaginationQueryParameters or inheritor of it and returns a dict, when called.
         :param data_field: A field in the returned dict, when the function was called, which contains array of data.
         :param external_arguments: Additional arguments of the functions.
         :param request_portion: How many data to fetch at once
