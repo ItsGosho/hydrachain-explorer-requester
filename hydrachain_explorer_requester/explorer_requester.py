@@ -10,6 +10,10 @@ from hydrachain_explorer_requester import __version__
 from datetime import datetime
 
 from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
+from hydrachain_explorer_requester.query_parameters.address_basic_transactions_query_parameters import \
+    AddressBasicTransactionsQueryParameters
+from hydrachain_explorer_requester.query_parameters.address_contract_transactions_query_parameters import \
+    AddressContractTransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.address_transactions_query_parameters import \
     AddressTransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.biggest_miners_query_parameters import BiggestMinersQueryParameters
@@ -61,7 +65,9 @@ class ExplorerRequester:
         self.session.mount('http://', self.http_adapter)
         self.session.mount('https://', self.http_adapter)
 
-    def search(self, value: str) -> dict:
+    def search(self,
+               value: str
+               ) -> dict:
 
         return self._request_explorer_json(
             path='/7001/search',
@@ -70,7 +76,9 @@ class ExplorerRequester:
             }
         )
 
-    def get_biggest_miners(self, query_parameters: BiggestMinersQueryParameters) -> dict:
+    def get_biggest_miners(self,
+                           query_parameters: BiggestMinersQueryParameters = BiggestMinersQueryParameters()
+                           ) -> dict:
 
         return self._request_explorer_json(
             path='/7001/misc/biggest-miners',
@@ -87,7 +95,9 @@ class ExplorerRequester:
             request_portion=request_portion
         )
 
-    def get_rich_list(self, query_parameters: RichListQueryParameters) -> dict:
+    def get_rich_list(self,
+                      query_parameters: RichListQueryParameters = RichListQueryParameters()
+                      ) -> dict:
 
         return self._request_explorer_json(
             path='/7001/misc/rich-list',
@@ -96,7 +106,9 @@ class ExplorerRequester:
             }
         )
 
-    def get_rich_list_iterator(self, request_portion: int = 20):
+    def get_rich_list_iterator(self,
+                               request_portion: int = 20
+                               ):
 
         return self._pageable_iterator(
             function=self.get_rich_list,
@@ -122,7 +134,9 @@ class ExplorerRequester:
             path='/7001/stats/address-growth'
         )
 
-    def get_recent_blocks(self, query_parameters: RecentBlocksQueryParameters) -> dict:
+    def get_recent_blocks(self,
+                          query_parameters: RecentBlocksQueryParameters = RecentBlocksQueryParameters()
+                          ) -> dict:
 
         return self._request_explorer_json(
             path='/7001/recent-blocks',
@@ -143,7 +157,9 @@ class ExplorerRequester:
             path='/7001/info'
         )
 
-    def get_block(self, value: str | int) -> dict:
+    def get_block(self,
+                  value: str | int
+                  ) -> dict:
         """
         :param value: height or hash
         """
@@ -152,7 +168,9 @@ class ExplorerRequester:
             path=f'/7001/block/{value}'
         )
 
-    def get_blocks(self, query_parameters: BlocksQueryParameters) -> dict:
+    def get_blocks(self,
+                   query_parameters: BlocksQueryParameters = BlocksQueryParameters()
+                   ) -> dict:
 
         return self._request_explorer_json(
             path='/7001/blocks',
@@ -161,7 +179,9 @@ class ExplorerRequester:
             }
         )
 
-    def get_tokens(self, query_parameters: TokensQueryParameters = None) -> dict:
+    def get_tokens(self,
+                   query_parameters: TokensQueryParameters = TokensQueryParameters()
+                   ) -> dict:
         return self._request_explorer_json(
             path='/7001/qrc20',
             params={
@@ -169,7 +189,9 @@ class ExplorerRequester:
             }
         )
 
-    def get_tokens_iterator(self, request_portion: int = 20):
+    def get_tokens_iterator(self,
+                            request_portion: int = 20
+                            ):
 
         return self._pageable_iterator(
             function=self.get_tokens,
@@ -177,13 +199,18 @@ class ExplorerRequester:
             request_portion=request_portion
         )
 
-    def get_contract(self, contract: str) -> dict:
+    def get_contract(self,
+                     contract: str
+                     ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/contract/{contract}'
         )
 
-    def get_contract_transactions(self, contract: str, query_parameters: ContractTransactionsQueryParameters) -> dict:
+    def get_contract_transactions(self,
+                                  contract: str,
+                                  query_parameters: ContractTransactionsQueryParameters = ContractTransactionsQueryParameters()
+                                  ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/contract/{contract}/txs',
@@ -192,7 +219,10 @@ class ExplorerRequester:
             }
         )
 
-    def get_contract_transactions_iterator(self, contract: str, request_portion: int = 20):
+    def get_contract_transactions_iterator(self,
+                                           contract: str,
+                                           request_portion: int = 20
+                                           ):
 
         return self._pageable_iterator(
             function=self.get_contract_transactions,
@@ -201,19 +231,26 @@ class ExplorerRequester:
             request_portion=request_portion
         )
 
-    def get_address(self, address: str) -> dict:
+    def get_address(self,
+                    address: str
+                    ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}'
         )
 
-    def get_address_balance(self, address: str,
-                            category: AddressBalanceCategory = AddressBalanceCategory.NO_CATEGORY) -> str:
+    def get_address_balance(self,
+                            address: str,
+                            category: AddressBalanceCategory = AddressBalanceCategory.NO_CATEGORY
+                            ) -> str:
         return self._request_explorer_text(
             path=f'/7001/address/{address}/balance/{category.value}',
         )
 
-    def get_address_transactions(self, address: str, query_parameters: AddressTransactionsQueryParameters) -> dict:
+    def get_address_transactions(self,
+                                 address: str,
+                                 query_parameters: AddressTransactionsQueryParameters = AddressTransactionsQueryParameters()
+                                 ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/txs',
@@ -222,7 +259,10 @@ class ExplorerRequester:
             }
         )
 
-    def get_address_transactions_iterator(self, address: str, request_portion: int = 20):
+    def get_address_transactions_iterator(self,
+                                          address: str,
+                                          request_portion: int = 20
+                                          ):
 
         return self._pageable_iterator(
             function=self.get_address_transactions,
@@ -231,13 +271,99 @@ class ExplorerRequester:
             request_portion=request_portion
         )
 
-    def get_transaction(self, transaction) -> dict:
+    def get_address_basic_transactions(self,
+                                       address: str,
+                                       query_parameters: AddressBasicTransactionsQueryParameters = AddressBasicTransactionsQueryParameters()
+                                       ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/basic-txs',
+            params={
+                **self.get_pagination_query_parameters(query_parameters)
+            }
+        )
+
+    def get_address_basic_transactions_iterator(self,
+                                                address: str,
+                                                request_portion: int = 20
+                                                ):
+
+        return self._pageable_iterator(
+            function=self.get_address_basic_transactions,
+            external_arguments={'address': address},
+            data_field='transactions',
+            request_portion=request_portion
+        )
+
+    def get_address_contract_transactions(self,
+                                          address: str,
+                                          query_parameters: AddressContractTransactionsQueryParameters = AddressContractTransactionsQueryParameters()
+                                          ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/contract-txs',
+            params={
+                **self.get_pagination_query_parameters(query_parameters)
+            }
+        )
+
+    def get_address_contract_transactions_iterator(self,
+                                                   address: str,
+                                                   request_portion: int = 20
+                                                   ):
+
+        return self._pageable_iterator(
+            function=self.get_address_contract_transactions,
+            external_arguments={'address': address},
+            data_field='transactions',
+            request_portion=request_portion
+        )
+
+    def get_address_contract_transactions_by_contract(self,
+                                                      address: str,
+                                                      contract: str,
+                                                      query_parameters: AddressContractTransactionsQueryParameters = AddressContractTransactionsQueryParameters()
+                                                      ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/contract-txs/{contract}',
+            params={
+                **self.get_pagination_query_parameters(query_parameters)
+            }
+        )
+
+    def get_address_contract_transactions_by_contract_iterator(self,
+                                                               address: str,
+                                                               contract: str,
+                                                               request_portion: int = 20
+                                                               ):
+
+        return self._pageable_iterator(
+            function=self.get_address_contract_transactions_by_contract,
+            external_arguments={'address': address},
+            data_field='transactions',
+            request_portion=request_portion
+        )
+
+    def get_transaction(self,
+                        transaction
+                        ) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/tx/{transaction}'
         )
 
-    def get_transactions(self, transactions: List[str]) -> dict:
+    def get_raw_transaction(self,
+                            transaction
+                            ) -> str:
+
+        return self._request_explorer_text(
+            path=f'/7001/raw-tx/{transaction}'
+        )
+
+    def get_transactions(self,
+                         transactions: List[str]
+                         ) -> dict:
         transactions_formatted = ','.join(transactions)
 
         return self._request_explorer_json(
@@ -343,7 +469,9 @@ class ExplorerRequester:
     def _get_request_headers(self) -> dict:
         return {'User-Agent': self.request_user_agent}
 
-    def get_pagination_query_parameters(self, query_parameters: PaginationQueryParameters):
+    def get_pagination_query_parameters(self,
+                                        query_parameters: PaginationQueryParameters = PaginationQueryParameters()
+                                        ):
         """
         Some requests in the explorer are pageable and thus accept pagination query parameters.
         These pagination parameters have requirements. You can't pass them as you want.
