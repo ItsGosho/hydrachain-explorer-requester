@@ -10,6 +10,8 @@ from hydrachain_explorer_requester import __version__
 from datetime import datetime
 
 from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
+from hydrachain_explorer_requester.query_parameters.address_balance_history_query_parameters import \
+    AddressBalanceHistoryQueryParameters
 from hydrachain_explorer_requester.query_parameters.address_basic_transactions_query_parameters import \
     AddressBasicTransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.address_contract_transactions_query_parameters import \
@@ -239,12 +241,94 @@ class ExplorerRequester:
             path=f'/7001/address/{address}'
         )
 
+    def get_address_utxo(self,
+                         address: str
+                         ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/utxo'
+        )
+
     def get_address_balance(self,
                             address: str,
                             category: AddressBalanceCategory = AddressBalanceCategory.NO_CATEGORY
                             ) -> str:
         return self._request_explorer_text(
             path=f'/7001/address/{address}/balance/{category.value}',
+        )
+
+    def get_address_balance_history(self,
+                                    address: str,
+                                    query_parameters: AddressBalanceHistoryQueryParameters = AddressBalanceHistoryQueryParameters()
+                                    ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/balance-history',
+            params={
+                **self.get_pagination_query_parameters(query_parameters)
+            }
+        )
+
+    def get_address_balance_history_iterator(self,
+                                             address: str,
+                                             request_portion: int = 20
+                                             ):
+
+        return self._pageable_iterator(
+            function=self.get_address_balance_history,
+            external_arguments={'address': address},
+            data_field='transactions',
+            request_portion=request_portion
+        )
+
+    def get_address_qrc20_balance_history(self,
+                                          address: str,
+                                          query_parameters: AddressBalanceHistoryQueryParameters = AddressBalanceHistoryQueryParameters()
+                                          ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/qrc20-balance-history',
+            params={
+                **self.get_pagination_query_parameters(query_parameters)
+            }
+        )
+
+    def get_address_qrc20_balance_history_iterator(self,
+                                                   address: str,
+                                                   request_portion: int = 20
+                                                   ):
+
+        return self._pageable_iterator(
+            function=self.get_address_qrc20_balance_history,
+            external_arguments={'address': address},
+            data_field='transactions',
+            request_portion=request_portion
+        )
+
+    def get_address_qrc20_balance_history_by_token(self,
+                                                   address: str,
+                                                   token: str,
+                                                   query_parameters: AddressBalanceHistoryQueryParameters = AddressBalanceHistoryQueryParameters()
+                                                   ) -> dict:
+
+        return self._request_explorer_json(
+            path=f'/7001/address/{address}/qrc20-balance-history/{token}',
+            params={
+                **self.get_pagination_query_parameters(query_parameters)
+            }
+        )
+
+    def get_address_qrc20_balance_history_by_token_iterator(self,
+                                                            address: str,
+                                                            token: str,
+                                                            request_portion: int = 20
+                                                            ):
+
+        return self._pageable_iterator(
+            function=self.get_address_qrc20_balance_history_by_token,
+            external_arguments={'address': address, 'token': token},
+            data_field='transactions',
+            request_portion=request_portion
         )
 
     def get_address_transactions(self,
