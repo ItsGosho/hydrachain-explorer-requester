@@ -27,3 +27,14 @@ class SearchLogsQueryParameters(PaginationQueryParameters, BlockQueryParameters)
 
     def set_topic4(self, topic4: str):
         self.topic4.value = topic4
+
+    def pairs(self) -> dict:
+        return {
+            **PaginationQueryParameters.pairs(self),
+            **BlockQueryParameters.pairs(self),
+            **self.contract.pair(),
+            **self.topic1.pair(),
+            **self.topic2.pair(),
+            **self.topic3.pair(),
+            **self.topic4.pair(),
+        }

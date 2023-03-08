@@ -37,3 +37,13 @@ class PaginationQueryParameters:
 
     def is_page_size_page(self) -> bool:
         return self.page_size.is_set() and self.page.is_set()
+
+    def pairs(self) -> dict:
+        return {
+            **self.limit.pair(),
+            **self.offset.pair(),
+            **self.from_.pair(),
+            **self.to.pair(),
+            **self.page_size.pair(),
+            **self.page.pair(),
+        }

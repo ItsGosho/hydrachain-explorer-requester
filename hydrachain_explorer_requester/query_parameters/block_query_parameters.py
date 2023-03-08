@@ -22,3 +22,11 @@ class BlockQueryParameters:
 
     def set_to_time(self, to_time: datetime):
         self.to_time.value = to_time.isoformat()
+
+    def pairs(self) -> dict:
+        return {
+            **self.from_block.pair(),
+            **self.to_block.pair(),
+            **self.from_time.pair(),
+            **self.to_time.pair(),
+        }

@@ -11,3 +11,8 @@ class BlocksQueryParameters:
 
     def set_date(self, date: datetime.date):
         self.date.value = date.strftime('%Y-%m-%d')
+
+    def pairs(self) -> dict:
+        return {
+            **self.date.pair()
+        }

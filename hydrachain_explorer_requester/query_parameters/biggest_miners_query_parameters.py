@@ -6,4 +6,7 @@ from hydrachain_explorer_requester.query_parameters.pagination_query_parameters 
 
 @dataclass
 class BiggestMinersQueryParameters(PaginationQueryParameters):
-    pass
+    def pairs(self) -> dict:
+        return {
+            **PaginationQueryParameters.pairs(self),
+        }

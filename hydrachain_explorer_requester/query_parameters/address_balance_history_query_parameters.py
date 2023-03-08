@@ -11,3 +11,9 @@ class AddressBalanceHistoryQueryParameters(PaginationQueryParameters):
 
     def set_reversed(self, reversed: str):
         self.reversed.value = reversed
+
+    def pairs(self) -> dict:
+        return {
+            **PaginationQueryParameters.pairs(self),
+            **self.reversed.pair()
+        }

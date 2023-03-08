@@ -68,9 +68,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path='/7001/search',
-            params={
-                'query': value
-            }
+            params={'query': value}
         )
 
     def get_biggest_miners(self,
@@ -79,9 +77,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path='/7001/misc/biggest-miners',
-            params={
-                **self.get_pagination_query_parameters(query_parameters)
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_biggest_miners_iterator(self, request_portion: int = 20):
@@ -98,9 +94,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path='/7001/misc/rich-list',
-            params={
-                **self.get_pagination_query_parameters(query_parameters)
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_rich_list_iterator(self,
@@ -137,9 +131,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path='/7001/recent-blocks',
-            params={
-                **query_parameters.count.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_recent_txs(self) -> dict:
@@ -171,9 +163,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path='/7001/blocks',
-            params={
-                **query_parameters.date.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_tokens(self,
@@ -181,9 +171,7 @@ class ExplorerRequester:
                    ) -> dict:
         return self._request_explorer_json(
             path='/7001/qrc20',
-            params={
-                **self.get_pagination_query_parameters(query_parameters)
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_tokens_iterator(self,
@@ -211,10 +199,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/contract/{contract}/txs',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.reversed.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_contract_transactions_iterator(self,
@@ -236,10 +221,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/contract/{contract}/basic-txs',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.reversed.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_contract_basic_transactions_iterator(self,
@@ -285,9 +267,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/balance-history',
-            params={
-                **self.get_pagination_query_parameters(query_parameters)
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_balance_history_iterator(self,
@@ -309,9 +289,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/qrc20-balance-history',
-            params={
-                **self.get_pagination_query_parameters(query_parameters)
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_qrc20_balance_history_iterator(self,
@@ -334,9 +312,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/qrc20-balance-history/{token}',
-            params={
-                **self.get_pagination_query_parameters(query_parameters)
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_qrc20_balance_history_by_token_iterator(self,
@@ -359,10 +335,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/txs',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.reversed.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_transactions_iterator(self,
@@ -385,10 +358,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/qrc20-txs/{token}',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.reversed.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_qrc20_transactions_iterator(self,
@@ -411,10 +381,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/basic-txs',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.reversed.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_basic_transactions_iterator(self,
@@ -436,10 +403,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/contract-txs',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.reversed.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_contract_transactions_iterator(self,
@@ -462,10 +426,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/contract-txs/{contract}',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.reversed.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_address_contract_transactions_by_contract_iterator(self,
@@ -513,10 +474,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/contract/{contract}/call',
-            params={
-                **query_parameters.data.pair(),
-                **query_parameters.sender.pair()
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_search_logs(self,
@@ -525,14 +483,7 @@ class ExplorerRequester:
 
         return self._request_explorer_json(
             path=f'/7001/searchlogs',
-            params={
-                **self.get_pagination_query_parameters(query_parameters),
-                **query_parameters.contract.pair(),
-                **query_parameters.topic1.pair(),
-                **query_parameters.topic2.pair(),
-                **query_parameters.topic3.pair(),
-                **query_parameters.topic4.pair(),
-            }
+            params={**query_parameters.pairs()}
         )
 
     def get_search_logs_iterator(self,
@@ -643,43 +594,3 @@ class ExplorerRequester:
 
     def _get_request_headers(self) -> dict:
         return {'User-Agent': self.request_user_agent}
-
-    def get_pagination_query_parameters(self,
-                                        query_parameters: PaginationQueryParameters = PaginationQueryParameters()
-                                        ):
-        """
-        Some requests in the explorer are pageable and thus accept pagination query parameters.
-        These pagination parameters have requirements. You can't pass them as you want.
-        The rules are as follows:
-        limit and offset must be passed together if one of them is present.
-        from and to must be passed together if one of them is present.
-        pageSize and page must be passed together if one of them is present.
-        You can't pass different groups like limit and offset with from and to.
-        Thus, we make priority.
-        1. pageSize and page
-        2. limit and offset
-        3. from and to
-        If you pass multiple groups, only the first one from the priority list will be taken.
-        """
-        if query_parameters is None:
-            return {}
-
-        if query_parameters.is_page_size_page():
-            return {
-                **query_parameters.page.pair(),
-                **query_parameters.page_size.pair()
-            }
-
-        if query_parameters.is_from_to_set():
-            return {
-                **query_parameters.from_.pair(),
-                **query_parameters.to.pair()
-            }
-
-        if query_parameters.is_limit_offset_set():
-            return {
-                **query_parameters.limit.pair(),
-                **query_parameters.offset.pair()
-            }
-
-        return {}

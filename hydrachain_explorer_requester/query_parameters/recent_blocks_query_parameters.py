@@ -10,3 +10,8 @@ class RecentBlocksQueryParameters:
 
     def set_count(self, count: int):
         self.count.value = count
+
+    def pairs(self) -> dict:
+        return {
+            **self.count.pair()
+        }

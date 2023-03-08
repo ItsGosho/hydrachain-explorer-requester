@@ -15,3 +15,9 @@ class CallContractQueryParameters:
 
     def set_sender(self, sender: str):
         self.sender.value = sender
+
+    def pairs(self) -> dict:
+        return {
+            **self.data.pair(),
+            **self.sender.pair()
+        }
