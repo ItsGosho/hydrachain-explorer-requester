@@ -143,7 +143,7 @@ class ExplorerRequester:
             path='/7001/info'
         )
 
-    def get_block(self, value: str) -> dict:
+    def get_block(self, value: str | int) -> dict:
         """
         :param value: height or hash
         """
