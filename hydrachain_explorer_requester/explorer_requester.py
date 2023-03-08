@@ -10,6 +10,14 @@ from hydrachain_explorer_requester import __version__
 from datetime import datetime
 
 from hydrachain_explorer_requester.address_balance_category import AddressBalanceCategory
+from hydrachain_explorer_requester.query_parameters.address_transactions_query_parameters import \
+    AddressTransactionsQueryParameters
+from hydrachain_explorer_requester.query_parameters.biggest_miners_query_parameters import BiggestMinersQueryParameters
+from hydrachain_explorer_requester.query_parameters.contract_transactions_query_parameters import \
+    ContractTransactionsQueryParameters
+from hydrachain_explorer_requester.query_parameters.pagination_query_parameters import PaginationQueryParameters
+from hydrachain_explorer_requester.query_parameters.rich_list_query_parameters import RichListQueryParameters
+from hydrachain_explorer_requester.query_parameters.tokens_query_parameters import TokensQueryParameters
 
 _logger = logging.getLogger(__name__)
 
@@ -60,13 +68,12 @@ class ExplorerRequester:
             }
         )
 
-    def get_biggest_miners(self, page_number: int = 0, page_size: int = 20) -> dict:
+    def get_biggest_miners(self, query_parameters: BiggestMinersQueryParameters) -> dict:
 
         return self._request_explorer_json(
             path='/7001/misc/biggest-miners',
             params={
-                'page': page_number,
-                'pageSize': page_size
+                **self.get_pagination_query_parameters(query_parameters)
             }
         )
 
@@ -78,13 +85,12 @@ class ExplorerRequester:
             request_portion=request_portion
         )
 
-    def get_rich_list(self, page_number: int = 0, page_size: int = 20) -> dict:
+    def get_rich_list(self, query_parameters: RichListQueryParameters) -> dict:
 
         return self._request_explorer_json(
             path='/7001/misc/rich-list',
             params={
-                'page': page_number,
-                'pageSize': page_size
+                **self.get_pagination_query_parameters(query_parameters)
             }
         )
 
@@ -149,13 +155,11 @@ class ExplorerRequester:
             }
         )
 
-    def get_tokens(self, page_number: int = 0, page_size: int = 20) -> dict:
-
+    def get_tokens(self, query_parameters: TokensQueryParameters = None) -> dict:
         return self._request_explorer_json(
             path='/7001/qrc20',
             params={
-                'page': page_number,
-                'pageSize': page_size
+                **self.get_pagination_query_parameters(query_parameters)
             }
         )
 
@@ -173,13 +177,12 @@ class ExplorerRequester:
             path=f'/7001/contract/{contract}'
         )
 
-    def get_contract_transactions(self, contract: str, page_number: int = 0, page_size: int = 20) -> dict:
+    def get_contract_transactions(self, contract: str, query_parameters: ContractTransactionsQueryParameters) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/contract/{contract}/txs',
             params={
-                'page': page_number,
-                'pageSize': page_size
+                **self.get_pagination_query_parameters(query_parameters)
             }
         )
 
@@ -204,13 +207,12 @@ class ExplorerRequester:
             path=f'/7001/address/{address}/balance/{category.value}',
         )
 
-    def get_address_transactions(self, address: str, page_number: int = 0, page_size: int = 20) -> dict:
+    def get_address_transactions(self, address: str, query_parameters: AddressTransactionsQueryParameters) -> dict:
 
         return self._request_explorer_json(
             path=f'/7001/address/{address}/txs',
             params={
-                'page': page_number,
-                'pageSize': page_size
+                **self.get_pagination_query_parameters(query_parameters)
             }
         )
 
@@ -237,7 +239,8 @@ class ExplorerRequester:
         )
 
     def _pageable_iterator(self,
-                           function: Callable, data_field: str,
+                           function: Callable,
+                           data_field: str,
                            external_arguments: dict = {},
                            request_portion: int = 20
                            ):
@@ -330,3 +333,41 @@ class ExplorerRequester:
 
     def _get_request_headers(self) -> dict:
         return {'User-Agent': self.request_user_agent}
+
+    def get_pagination_query_parameters(self, query_parameters: PaginationQueryParameters):
+        """
+        Some requests in the explorer are pageable and thus accept pagination query parameters.
+        These pagination parameters have requirements. You can't pass them as you want.
+        The rules are as follows:
+        limit and offset must be passed together if one of them is present.
+        from and to must be passed together if one of them is present.
+        pageSize and page must be passed together if one of them is present.
+        You can't pass different groups like limit and offset with from and to.
+        Thus, we make priority.
+        1. pageSize and page
+        2. limit and offset
+        3. from and to
+        If you pass multiple groups, only the first one from the priority list will be taken.
+        """
+        if query_parameters is None:
+            return {}
+
+        if query_parameters.is_page_size_page():
+            return {
+                **query_parameters.page.pair(),
+                **query_parameters.page_size.pair()
+            }
+
+        if query_parameters.is_from_to_set():
+            return {
+                **query_parameters.from_.pair(),
+                **query_parameters.to.pair()
+            }
+
+        if query_parameters.is_limit_offset_set():
+            return {
+                **query_parameters.limit.pair(),
+                **query_parameters.offset.pair()
+            }
+
+        return {}
