@@ -16,6 +16,7 @@ from hydrachain_explorer_requester.query_parameters.biggest_miners_query_paramet
 from hydrachain_explorer_requester.query_parameters.contract_transactions_query_parameters import \
     ContractTransactionsQueryParameters
 from hydrachain_explorer_requester.query_parameters.pagination_query_parameters import PaginationQueryParameters
+from hydrachain_explorer_requester.query_parameters.recent_blocks_query_parameters import RecentBlocksQueryParameters
 from hydrachain_explorer_requester.query_parameters.rich_list_query_parameters import RichListQueryParameters
 from hydrachain_explorer_requester.query_parameters.tokens_query_parameters import TokensQueryParameters
 
@@ -120,10 +121,13 @@ class ExplorerRequester:
             path='/7001/stats/address-growth'
         )
 
-    def get_recent_blocks(self) -> dict:
+    def get_recent_blocks(self, query_parameters: RecentBlocksQueryParameters) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/recent-blocks'
+            path='/7001/recent-blocks',
+            params={
+                **query_parameters.count.pair()
+            }
         )
 
     def get_recent_txs(self) -> dict:
