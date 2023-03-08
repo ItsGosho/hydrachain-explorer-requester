@@ -258,8 +258,11 @@ class ExplorerRequester:
         page_number = 0
         while True:
 
-            external_arguments['page_number'] = page_number
-            external_arguments['page_size'] = request_portion
+            pagination_query_parameter = PaginationQueryParameters()
+            pagination_query_parameter.set_page(page_number)
+            pagination_query_parameter.set_page_size(request_portion)
+
+            external_arguments['query_parameters'] = pagination_query_parameter
 
             response = function(**external_arguments)
 
