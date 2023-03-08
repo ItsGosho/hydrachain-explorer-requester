@@ -340,7 +340,7 @@ class ExplorerRequester:
 
         return self._pageable_iterator(
             function=self.get_address_contract_transactions_by_contract,
-            external_arguments={'address': address},
+            external_arguments={'address': address, 'contract': contract},
             data_field='transactions',
             request_portion=request_portion
         )
