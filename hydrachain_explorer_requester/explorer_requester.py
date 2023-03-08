@@ -8,6 +8,7 @@ from requests.adapters import HTTPAdapter
 
 from hydrachain_explorer_requester import __version__
 from hydrachain_explorer_requester.enum import AddressBalanceCategory
+from hydrachain_explorer_requester.explorer_url import ExplorerURL
 from hydrachain_explorer_requester.query_parameters import *
 
 _logger = logging.getLogger(__name__)
@@ -38,9 +39,10 @@ class ExplorerRequester:
                  logger: logging = _logger,
                  timeout_seconds: float = None,
                  hooks: dict = None,
-                 http_adapter: HTTPAdapter = HTTPAdapter()):
+                 http_adapter: HTTPAdapter = HTTPAdapter(),
+                 urls: ExplorerURL = ExplorerURL()
+                 ):
         self.request_user_agent = f'Hydrachain Explorer Requester/{__version__}'
-        self.domain = 'https://explorer.hydrachain.org'
 
         self.logger = logger
         self.session = Session()
@@ -50,12 +52,14 @@ class ExplorerRequester:
         self.session.mount('http://', self.http_adapter)
         self.session.mount('https://', self.http_adapter)
 
+        self.urls = urls
+
     def search(self,
                value: str
                ) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/search',
+            url=self.urls.get_search_url(),
             params={'query': value}
         )
 
@@ -64,7 +68,7 @@ class ExplorerRequester:
                            ) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/misc/biggest-miners',
+            url=self.urls.get_biggest_miners_url(),
             params={**query_parameters.pairs()}
         )
 
@@ -81,7 +85,7 @@ class ExplorerRequester:
                       ) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/misc/rich-list',
+            url=self.urls.get_rich_list_url(),
             params={**query_parameters.pairs()}
         )
 
@@ -98,19 +102,19 @@ class ExplorerRequester:
     def get_daily_transactions(self) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/stats/daily-transactions'
+            url=self.urls.get_daily_transactions_url()
         )
 
     def get_block_interval(self) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/stats/block-interval'
+            url=self.urls.get_block_interval_url()
         )
 
     def get_address_growth(self) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/stats/address-growth'
+            url=self.urls.get_address_growth_url()
         )
 
     def get_recent_blocks(self,
@@ -118,20 +122,20 @@ class ExplorerRequester:
                           ) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/recent-blocks',
+            url=self.urls.get_recent_blocks_url(),
             params={**query_parameters.pairs()}
         )
 
     def get_recent_txs(self) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/recent-txs'
+            url=self.urls.get_recent_txs_url()
         )
 
     def get_info(self) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/info'
+            url=self.urls.get_info_url()
         )
 
     def get_block(self,
@@ -142,7 +146,7 @@ class ExplorerRequester:
         """
 
         return self._request_explorer_json(
-            path=f'/7001/block/{value}'
+            url=self.urls.get_block_url(value)
         )
 
     def get_blocks(self,
@@ -150,7 +154,7 @@ class ExplorerRequester:
                    ) -> dict:
 
         return self._request_explorer_json(
-            path='/7001/blocks',
+            url=self.urls.get_blocks_url(),
             params={**query_parameters.pairs()}
         )
 
@@ -158,7 +162,7 @@ class ExplorerRequester:
                    query_parameters: TokensQueryParameters = TokensQueryParameters()
                    ) -> dict:
         return self._request_explorer_json(
-            path='/7001/qrc20',
+            url=self.urls.get_tokens_url(),
             params={**query_parameters.pairs()}
         )
 
@@ -177,7 +181,7 @@ class ExplorerRequester:
                      ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/contract/{contract}'
+            url=self.urls.get_contract_url(contract)
         )
 
     def get_contract_transactions(self,
@@ -186,7 +190,7 @@ class ExplorerRequester:
                                   ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/contract/{contract}/txs',
+            url=self.urls.get_contract_transactions_url(contract),
             params={**query_parameters.pairs()}
         )
 
@@ -208,7 +212,7 @@ class ExplorerRequester:
                                         ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/contract/{contract}/basic-txs',
+            url=self.urls.get_contract_basic_transactions_url(contract),
             params={**query_parameters.pairs()}
         )
 
@@ -229,7 +233,7 @@ class ExplorerRequester:
                     ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}'
+            url=self.urls.get_address_url(address)
         )
 
     def get_address_utxo(self,
@@ -237,7 +241,7 @@ class ExplorerRequester:
                          ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/utxo'
+            url=self.urls.get_address_utxo_url(address)
         )
 
     def get_address_balance(self,
@@ -245,7 +249,7 @@ class ExplorerRequester:
                             category: AddressBalanceCategory = AddressBalanceCategory.NO_CATEGORY
                             ) -> str:
         return self._request_explorer_text(
-            path=f'/7001/address/{address}/balance/{category.value}',
+            url=self.urls.get_address_balance_url(address, category)
         )
 
     def get_address_balance_history(self,
@@ -254,7 +258,7 @@ class ExplorerRequester:
                                     ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/balance-history',
+            url=self.urls.get_address_balance_history_url(address),
             params={**query_parameters.pairs()}
         )
 
@@ -276,7 +280,7 @@ class ExplorerRequester:
                                           ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/qrc20-balance-history',
+            url=self.urls.get_address_qrc20_balance_history_url(address),
             params={**query_parameters.pairs()}
         )
 
@@ -299,7 +303,7 @@ class ExplorerRequester:
                                                    ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/qrc20-balance-history/{token}',
+            url=self.urls.get_address_qrc20_balance_history_by_token_url(address, token),
             params={**query_parameters.pairs()}
         )
 
@@ -322,7 +326,7 @@ class ExplorerRequester:
                                  ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/txs',
+            url=self.urls.get_address_transactions_url(address),
             params={**query_parameters.pairs()}
         )
 
@@ -345,7 +349,7 @@ class ExplorerRequester:
                                        ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/qrc20-txs/{token}',
+            url=self.urls.get_address_qrc20_transactions_url(address, token),
             params={**query_parameters.pairs()}
         )
 
@@ -368,7 +372,7 @@ class ExplorerRequester:
                                        ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/basic-txs',
+            url=self.urls.get_address_basic_transactions_url(address),
             params={**query_parameters.pairs()}
         )
 
@@ -390,7 +394,7 @@ class ExplorerRequester:
                                           ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/contract-txs',
+            url=self.urls.get_address_contract_transactions_url(address),
             params={**query_parameters.pairs()}
         )
 
@@ -413,7 +417,7 @@ class ExplorerRequester:
                                                       ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/address/{address}/contract-txs/{contract}',
+            url=self.urls.get_address_contract_transactions_by_contract_url(address, contract),
             params={**query_parameters.pairs()}
         )
 
@@ -431,26 +435,25 @@ class ExplorerRequester:
         )
 
     def get_transaction(self,
-                        transaction
+                        transaction: str
                         ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/tx/{transaction}'
+            url=self.urls.get_transaction_url(transaction)
         )
 
     def get_raw_transaction(self,
-                            transaction
+                            transaction: str
                             ) -> str:
 
         return self._request_explorer_text(
-            path=f'/7001/raw-tx/{transaction}'
+            url=self.urls.get_raw_transaction_url(transaction)
         )
 
     def get_transactions(self, transactions: List[str]) -> dict:
-        transactions_formatted = ','.join(transactions)
 
         return self._request_explorer_json(
-            path=f'/7001/txs/{transactions_formatted}'
+            url=self.urls.get_transactions_url(transactions)
         )
 
     def call_contract(self,
@@ -459,7 +462,7 @@ class ExplorerRequester:
                       ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/contract/{contract}/call',
+            url=self.urls.get_call_contract_url(contract),
             params={**query_parameters.pairs()}
         )
 
@@ -468,7 +471,7 @@ class ExplorerRequester:
                         ) -> dict:
 
         return self._request_explorer_json(
-            path=f'/7001/searchlogs',
+            url=self.urls.get_search_logs_url(),
             params={**query_parameters.pairs()}
         )
 
@@ -518,34 +521,31 @@ class ExplorerRequester:
             page_number = page_number + 1
 
     def _request_explorer_json(self,
-                               path: str,
+                               url: str,
                                params: dict = {},
-                               domain: str = None,
                                method: str = 'GET',
                                ) -> dict:
-        response = self._request_explorer(path, params, domain, method)
+        response = self._request_explorer(url, params, method)
         self._validate_response(response)
         return response.json()
 
     def _request_explorer_text(self,
-                               path: str,
+                               url: str,
                                params: dict = {},
-                               domain: str = None,
                                method: str = 'GET',
                                ) -> str:
-        response = self._request_explorer(path, params, domain, method)
+        response = self._request_explorer(url, params, method)
         return response.text
 
     def _request_explorer(self,
-                          path: str,
+                          url: str,
                           params: dict = {},
-                          domain: str = None,
                           method: str = 'GET',
                           ):
 
         request = requests.Request(
             method=method,
-            url=f'{domain or self.domain}{path}',
+            url=url,
             headers=self._get_request_headers(),
             params=params,
             hooks=self.hooks
