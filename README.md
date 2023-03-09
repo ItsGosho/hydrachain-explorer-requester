@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/pyversions/hydrachain-explorer-requester.svg)](https://pypi.python.org/pypi/hydrachain-explorer-requester)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ItsGosho/hydrachain-explorer-requester/blob/main/LICENSE)
 
-Easy to use library for accessing the [Hydrachain Explorer](https://explorer.hydrachain.org/) endpoints. Functionality for easy iteration over the pageable requests is provided. Optional configuration of the used requester in the library is also provided. Validation of the response is present.
+Easy to use library for accessing the [Hydrachain Explorer](https://explorer.hydrachain.org/) endpoints.
 
 ## Installation
 
@@ -45,14 +45,30 @@ from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
 explorer_requester = ExplorerRequester()
 
 # Address - https://explorer.hydrachain.org/address/HCiMdPYCsdPPvbjxHQMmK8QVBEGwextvir/
-address_transactions_iterator = explorer_requester.get_address_transactions_iterator("HCiMdPYCsdPPvbjxHQMmK8QVBEGwextvir")
+address_transactions = explorer_requester.get_address_transactions("HCiMdPYCsdPPvbjxHQMmK8QVBEGwextvir")
 
-for address_transactions_response in address_transactions_iterator:
-    print(address_transactions_response)
+print(address_transactions)
 ```
 
-- **_iterator** ending functions accept a optional **portion** parameter. The **portion** parameter define how much elements to be taken, when making each request.
-  - Multiple requests are needed, because some of the explorer's requests use **pagination**. If you don't want to use the **_iterator** - you can use the standard function. For the example above, the standard function will be `get_address_transactions`
+#### Address Transactions - Query Parameters: 
+
+```python
+from hydrachain_explorer_requester.explorer_requester import ExplorerRequester
+
+explorer_requester = ExplorerRequester()
+
+# Address - https://explorer.hydrachain.org/address/HCiMdPYCsdPPvbjxHQMmK8QVBEGwextvir/
+
+query_parameters = TransactionsQueryParameters()
+query_parameters.set_page(0)
+query_parameters.set_page_size(3)
+query_parameters.set_from(555555)
+query_parameters.set_to_block(666666)
+
+address_transactions = explorer_requester.get_address_transactions("HCiMdPYCsdPPvbjxHQMmK8QVBEGwextvir", query_parameters)
+
+print(address_transactions)
+```
 
 #### Search:
 
@@ -137,10 +153,9 @@ logger.info(block)
 ## Functionalities:
 
 - All of the explorer requests are supported
-- Some of the requests on the explorer use pagination, you can get the information on portions. In the library a two options are present for the requests that use pagination.
-  - Raw: You can specify the page and size you want and execute the request with
-  - Iterable: **_iterator** ending functions, which will iterate over all elements for you. Specify portion parameter to define how much elements to be fetch at each request.
 - You can configure the used requester in the library using the **timeout_seconds** and **http_adapter**. Specify **hooks** if you want via hooks and also configure the **logger**.
+- You can overwrite specific explorer URL. Examples present under **[/examples](https://github.com/ItsGosho/hydrachain-explorer-requester/tree/main/examples)**
+- You can overwrite  a query parameter. Examples present under **[/examples](https://github.com/ItsGosho/hydrachain-explorer-requester/tree/main/examples)**
 
 
 

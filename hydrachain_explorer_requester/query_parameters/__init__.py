@@ -1,4 +1,5 @@
 __all__ = [
+    'QueryParameter',
     'AddressBalanceHistoryQueryParameters',
     'CallContractQueryParameters',
     'SearchLogsQueryParameters',
@@ -15,6 +16,7 @@ from .address_balance_history_query_parameters import AddressBalanceHistoryQuery
 from .biggest_miners_query_parameters import BiggestMinersQueryParameters
 from .blocks_query_parameters import BlocksQueryParameters
 from .pagination_query_parameters import PaginationQueryParameters
+from .query_parameter import QueryParameter
 from .recent_blocks_query_parameters import RecentBlocksQueryParameters
 from .rich_list_query_parameters import RichListQueryParameters
 from .search_logs_query_parameters import SearchLogsQueryParameters
