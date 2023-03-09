@@ -72,14 +72,6 @@ class ExplorerRequester:
             params={**query_parameters.pairs()}
         )
 
-    def get_biggest_miners_iterator(self, request_portion: int = 20):
-
-        return self._pageable_iterator(
-            function=self.get_biggest_miners,
-            data_field='list',
-            request_portion=request_portion
-        )
-
     def get_rich_list(self,
                       query_parameters: RichListQueryParameters = RichListQueryParameters()
                       ) -> dict:
@@ -87,16 +79,6 @@ class ExplorerRequester:
         return self._request_explorer_json(
             url=self.urls.get_rich_list_url(),
             params={**query_parameters.pairs()}
-        )
-
-    def get_rich_list_iterator(self,
-                               request_portion: int = 20
-                               ):
-
-        return self._pageable_iterator(
-            function=self.get_rich_list,
-            data_field='list',
-            request_portion=request_portion
         )
 
     def get_daily_transactions(self) -> dict:
@@ -166,16 +148,6 @@ class ExplorerRequester:
             params={**query_parameters.pairs()}
         )
 
-    def get_tokens_iterator(self,
-                            request_portion: int = 20
-                            ):
-
-        return self._pageable_iterator(
-            function=self.get_tokens,
-            data_field='tokens',
-            request_portion=request_portion
-        )
-
     def get_contract(self,
                      contract: str
                      ) -> dict:
@@ -194,18 +166,6 @@ class ExplorerRequester:
             params={**query_parameters.pairs()}
         )
 
-    def get_contract_transactions_iterator(self,
-                                           contract: str,
-                                           request_portion: int = 20
-                                           ):
-
-        return self._pageable_iterator(
-            function=self.get_contract_transactions,
-            external_arguments={'contract': contract},
-            data_field='transactions',
-            request_portion=request_portion
-        )
-
     def get_contract_basic_transactions(self,
                                         contract: str,
                                         query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
@@ -214,18 +174,6 @@ class ExplorerRequester:
         return self._request_explorer_json(
             url=self.urls.get_contract_basic_transactions_url(contract),
             params={**query_parameters.pairs()}
-        )
-
-    def get_contract_basic_transactions_iterator(self,
-                                                 contract: str,
-                                                 request_portion: int = 20
-                                                 ):
-
-        return self._pageable_iterator(
-            function=self.get_contract_basic_transactions,
-            external_arguments={'contract': contract},
-            data_field='transactions',
-            request_portion=request_portion
         )
 
     def get_address(self,
@@ -262,18 +210,6 @@ class ExplorerRequester:
             params={**query_parameters.pairs()}
         )
 
-    def get_address_balance_history_iterator(self,
-                                             address: str,
-                                             request_portion: int = 20
-                                             ):
-
-        return self._pageable_iterator(
-            function=self.get_address_balance_history,
-            external_arguments={'address': address},
-            data_field='transactions',
-            request_portion=request_portion
-        )
-
     def get_address_qrc20_balance_history(self,
                                           address: str,
                                           query_parameters: AddressBalanceHistoryQueryParameters = AddressBalanceHistoryQueryParameters()
@@ -282,18 +218,6 @@ class ExplorerRequester:
         return self._request_explorer_json(
             url=self.urls.get_address_qrc20_balance_history_url(address),
             params={**query_parameters.pairs()}
-        )
-
-    def get_address_qrc20_balance_history_iterator(self,
-                                                   address: str,
-                                                   request_portion: int = 20
-                                                   ):
-
-        return self._pageable_iterator(
-            function=self.get_address_qrc20_balance_history,
-            external_arguments={'address': address},
-            data_field='transactions',
-            request_portion=request_portion
         )
 
     def get_address_qrc20_balance_history_by_token(self,
@@ -307,19 +231,6 @@ class ExplorerRequester:
             params={**query_parameters.pairs()}
         )
 
-    def get_address_qrc20_balance_history_by_token_iterator(self,
-                                                            address: str,
-                                                            token: str,
-                                                            request_portion: int = 20
-                                                            ):
-
-        return self._pageable_iterator(
-            function=self.get_address_qrc20_balance_history_by_token,
-            external_arguments={'address': address, 'token': token},
-            data_field='transactions',
-            request_portion=request_portion
-        )
-
     def get_address_transactions(self,
                                  address: str,
                                  query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
@@ -328,18 +239,6 @@ class ExplorerRequester:
         return self._request_explorer_json(
             url=self.urls.get_address_transactions_url(address),
             params={**query_parameters.pairs()}
-        )
-
-    def get_address_transactions_iterator(self,
-                                          address: str,
-                                          request_portion: int = 20
-                                          ):
-
-        return self._pageable_iterator(
-            function=self.get_address_transactions,
-            external_arguments={'address': address},
-            data_field='transactions',
-            request_portion=request_portion
         )
 
     def get_address_qrc20_transactions(self,
@@ -353,19 +252,6 @@ class ExplorerRequester:
             params={**query_parameters.pairs()}
         )
 
-    def get_address_qrc20_transactions_iterator(self,
-                                                address: str,
-                                                token: str,
-                                                request_portion: int = 20
-                                                ):
-
-        return self._pageable_iterator(
-            function=self.get_address_qrc20_transactions,
-            external_arguments={'address': address, 'token': token},
-            data_field='transactions',
-            request_portion=request_portion
-        )
-
     def get_address_basic_transactions(self,
                                        address: str,
                                        query_parameters: TransactionsQueryParameters = TransactionsQueryParameters()
@@ -374,18 +260,6 @@ class ExplorerRequester:
         return self._request_explorer_json(
             url=self.urls.get_address_basic_transactions_url(address),
             params={**query_parameters.pairs()}
-        )
-
-    def get_address_basic_transactions_iterator(self,
-                                                address: str,
-                                                request_portion: int = 20
-                                                ):
-
-        return self._pageable_iterator(
-            function=self.get_address_basic_transactions,
-            external_arguments={'address': address},
-            data_field='transactions',
-            request_portion=request_portion
         )
 
     def get_address_contract_transactions(self,
@@ -398,18 +272,6 @@ class ExplorerRequester:
             params={**query_parameters.pairs()}
         )
 
-    def get_address_contract_transactions_iterator(self,
-                                                   address: str,
-                                                   request_portion: int = 20
-                                                   ):
-
-        return self._pageable_iterator(
-            function=self.get_address_contract_transactions,
-            external_arguments={'address': address},
-            data_field='transactions',
-            request_portion=request_portion
-        )
-
     def get_address_contract_transactions_by_contract(self,
                                                       address: str,
                                                       contract: str,
@@ -419,19 +281,6 @@ class ExplorerRequester:
         return self._request_explorer_json(
             url=self.urls.get_address_contract_transactions_by_contract_url(address, contract),
             params={**query_parameters.pairs()}
-        )
-
-    def get_address_contract_transactions_by_contract_iterator(self,
-                                                               address: str,
-                                                               contract: str,
-                                                               request_portion: int = 20
-                                                               ):
-
-        return self._pageable_iterator(
-            function=self.get_address_contract_transactions_by_contract,
-            external_arguments={'address': address, 'contract': contract},
-            data_field='transactions',
-            request_portion=request_portion
         )
 
     def get_transaction(self,
@@ -474,51 +323,6 @@ class ExplorerRequester:
             url=self.urls.get_search_logs_url(),
             params={**query_parameters.pairs()}
         )
-
-    def get_search_logs_iterator(self,
-                                 request_portion: int = 20
-                                 ):
-
-        return self._pageable_iterator(
-            function=self.get_search_logs,
-            data_field='transactions',
-            request_portion=request_portion
-        )
-
-    def _pageable_iterator(self,
-                           function: Callable,
-                           data_field: str,
-                           external_arguments: dict = {},
-                           request_portion: int = 20
-                           ):
-        """
-        Easy-to-use wrapper for removing repeating logic, when calling a functions that have pageable.
-
-        :param function: A function, that have query_parameters argument, which is a class of type PaginationQueryParameters or inheritor of it and returns a dict, when called.
-        :param data_field: A field in the returned dict, when the function was called, which contains array of data.
-        :param external_arguments: Additional arguments of the functions.
-        :param request_portion: How many data to fetch at once
-        """
-        page_number = 0
-        while True:
-
-            pagination_query_parameter = PaginationQueryParameters()
-            pagination_query_parameter.set_page(page_number)
-            pagination_query_parameter.set_page_size(request_portion)
-
-            external_arguments['query_parameters'] = pagination_query_parameter
-
-            response = function(**external_arguments)
-
-            data = response[data_field]
-
-            if len(data) <= 0:
-                break
-
-            for d in data:
-                yield d
-
-            page_number = page_number + 1
 
     def _request_explorer_json(self,
                                url: str,
