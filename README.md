@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/pyversions/hydrachain-explorer-requester.svg)](https://pypi.python.org/pypi/hydrachain-explorer-requester)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ItsGosho/hydrachain-explorer-requester/blob/main/LICENSE)
 
-Easy to use library for accessing the [Hydrachain Explorer](https://explorer.hydrachain.org/) endpoints.
+Easy to use library for accessing the [Hydrachain Explorer](https://explorer.hydrachain.org/) endpoints. Postman collection of all request can be found [here](https://www.postman.com/itsgosho/workspace/public-workspace).
 
 ## Installation
 
